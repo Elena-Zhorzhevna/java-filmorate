@@ -3,11 +3,9 @@ package ru.yandex.practicum.filmorate.controller;
 import org.slf4j.Logger;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.validator.FilmValidator;
 
-import java.time.LocalDate;
-import java.time.Month;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,24 +26,7 @@ public class FilmController {
     @PostMapping
     public Film create(@RequestBody Film film) {
         log.info("Получен запрос на добавление фильма: {}", film);
-        String filmDescription = film.getDescription();
-        // проверяем выполнение необходимых условий
-        //название не может быть пустым
-        if (film.getName() == null || film.getName().isBlank()) {
-            throw new ValidationException("Название фильма не может быть пустым.");
-        }
-        //максимальная длина описания — 200 символов
-        if (filmDescription.length() > 200) {
-            throw new ValidationException("Максимальная длина описания - 200 символов.");
-        }
-        if (film.getReleaseDate().isBefore(LocalDate.of(1895, Month.DECEMBER, 28))) {
-            throw new ValidationException("Дата релиза не может быть раньше создания кино.");
-        }
-        //продолжительность фильма должна быть положительным числом
-        if (film.getDuration() <= 0) {
-            throw new ValidationException("Продолжительность фильма должна быть положительным числом.");
-        }
-
+        FilmValidator.isValidFilm(film);
         film.setId(getNextId());
         films.put(film.getId(), film);
         log.info("Добавлен фильм: {}", film);
@@ -61,6 +42,7 @@ public class FilmController {
             Film oldFilm = films.get(newFilm.getId());
             log.debug("Фильм до обновления: {}", oldFilm);
             // если фильм найден и все условия соблюдены, обновляем его содержимое
+            FilmValidator.isValidFilm(newFilm);
             oldFilm.setName(newFilm.getName());
             oldFilm.setDescription(newFilm.getDescription());
             oldFilm.setReleaseDate(newFilm.getReleaseDate());

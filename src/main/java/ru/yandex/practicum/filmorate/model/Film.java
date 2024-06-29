@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import java.time.LocalDate;
 
 public class Film {
-    private static final Logger log = org.slf4j.LoggerFactory.getLogger(Film.class);
     private int id; //идентификатор
     private String name; //название
     private String description; //описание
