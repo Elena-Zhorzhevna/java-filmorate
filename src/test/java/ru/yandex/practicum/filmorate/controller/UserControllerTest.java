@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate;
+package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -17,8 +18,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class UserControllerTest {
-    UserController controller = new UserController();
-    Map<Integer, User> users = new HashMap<>();
+    UserController userController;
+    UserService userService;
+    Map<Long, User> users = new HashMap<>();
+    UserControllerTest(UserController userController) {
+        this.userController = userController;
+    }
 
     @AfterEach
     void afterEach() {
@@ -28,17 +33,17 @@ public class UserControllerTest {
     //тест получения всех пользователей
     @Test
     void findAllUsersTest() {
-        User user1 = new User(1, "Jack", "flower@m.ru",
+        User user1 = new User(1,"Jack", "flower@m.ru",
                 LocalDate.of(2000, Month.NOVEMBER, 25));
         users.put(user1.getId(), user1);
-        controller.create(user1);
+        userController.create(user1);
         User user2 = new User(2, "Helen", "millenium@m.ru",
                 LocalDate.of(1998, Month.APRIL, 20));
         users.put(user2.getId(), user2);
-        controller.create(user2);
+        userController.create(user2);
         String result = "[" + user1.toString() + ", " + user2.toString() + "]";
         // Проверка, что метод findAll() возвращает всех пользователей из коллекции
-        String expected = controller.findAll().toString();
+        String expected = userController.findAll().toString();
         assertEquals(expected, result);
     }
 
@@ -65,11 +70,11 @@ public class UserControllerTest {
         String name = "TestUserName";
         LocalDate birthday = LocalDate.of(1999, Month.APRIL, 1);
         User existingUser = new User(login, email, name, birthday);
-        controller.create(existingUser);
+        userController.create(existingUser);
         User newUser = new User(existingUser.getId(), "NewLogin", "NewUser@email.ru", birthday);
         users.put(newUser.getId(), newUser);
         try {
-            User updatedUser = controller.update(newUser);
+            User updatedUser = userController.update(newUser);
             assertEquals(updatedUser.getLogin(), "NewLogin");
             assertEquals(updatedUser.getEmail(), "NewUser@email.ru");
             assertEquals(updatedUser.getBirthday(), birthday);
@@ -85,7 +90,7 @@ public class UserControllerTest {
                 LocalDate.of(2000, Month.NOVEMBER, 10));
         final Exception actualException = Assertions.assertThrows(NotFoundException.class,
                 () -> {
-                    controller.update(nonExistingUser);
+                    userController.update(nonExistingUser);
                 });
     }
 
@@ -98,7 +103,7 @@ public class UserControllerTest {
         user.setBirthday(futureDate);
         final Exception actualException = Assertions.assertThrows(ValidationException.class,
                 () -> {
-                    controller.create(user);
+                    userController.create(user);
                 });
         Assertions.assertEquals(expectedExceptionMessage, actualException.getMessage());
     }
@@ -111,7 +116,7 @@ public class UserControllerTest {
         user.setLogin("login with spaces");
         final Exception actualException = Assertions.assertThrows(ValidationException.class,
                 () -> {
-                    controller.create(user);
+                    userController.create(user);
                 });
         Assertions.assertEquals(expectedExceptionMessage, actualException.getMessage());
     }
@@ -124,7 +129,7 @@ public class UserControllerTest {
         user.setEmail("wrongEmailru");
         final Exception actualException = Assertions.assertThrows(ValidationException.class,
                 () -> {
-                    controller.create(user);
+                    userController.create(user);
                 });
         Assertions.assertEquals(expectedExceptionMessage, actualException.getMessage());
     }
@@ -133,8 +138,8 @@ public class UserControllerTest {
     @Test
     public void nameCanBeEmpty() {
         User testUser = new User("testLogin", "test@email.ru", LocalDate.parse("1995-11-12"));
-        controller.create(testUser);
-        String expectedName = controller.findAll()
+        userController.create(testUser);
+        String expectedName = userController.findAll()
                 .stream()
                 .findFirst()
                 .get()
