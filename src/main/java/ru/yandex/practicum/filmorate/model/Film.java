@@ -6,6 +6,7 @@ import lombok.Data;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+
 @Data
 public class Film {
     private long id; //идентификатор
@@ -13,14 +14,13 @@ public class Film {
     private String description; //описание
     private LocalDate releaseDate; //дата релиза
     private int duration; //продолжительность
-    //private int likesCounter; //счетчик лайков
     private Set<Long> likes = new HashSet<>(); //свойство, содержащее список id пользователей, поставивших лайк
 
     @JsonCreator
     public Film() {
     }
 
-    //конструктор для тестирования
+    //конструкторы для тестирования
     public Film(long id, String name, String description, LocalDate releaseDate, int duration) {
         this.id = id;
         this.name = name;
@@ -38,11 +38,9 @@ public class Film {
 
     public void addLike(Long id) {
         likes.add(id);
-        //likesCounter ++;
     }
 
     public void deleteLike(Long id) {
         likes.remove(id);
-        //likesCounter--;
     }
 }

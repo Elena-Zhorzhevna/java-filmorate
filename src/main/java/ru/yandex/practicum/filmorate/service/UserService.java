@@ -25,6 +25,11 @@ public class UserService {
         return userStorage.findAll();
     }
 
+    //получение пользователя по айди
+    public User getUserById(long id) {
+        return userStorage.findUserById(id);
+    }
+
     //добавление пользователя
     public User addUser(User user) {
         return userStorage.create(user);
@@ -35,9 +40,9 @@ public class UserService {
         return userStorage.update(user);
     }
 
-    //получение пользователя по айди
-    public User getUserById(long id) {
-        return userStorage.findUserById(id);
+    //удаление всех пользователей
+    public void removeAllUsers() {
+        userStorage.removeAllUsers();
     }
 
     //метод добавления пользователя в друзья

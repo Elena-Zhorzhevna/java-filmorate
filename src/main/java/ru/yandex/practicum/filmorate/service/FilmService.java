@@ -29,6 +29,11 @@ public class FilmService {
         return filmStorage.findAll();
     }
 
+    //получение фильма по айди
+    public Film getFilmById(long id) {
+        return filmStorage.findFilmById(id);
+    }
+
     //добавление фильма
     public Film createFilm(Film film) {
         return filmStorage.create(film);
@@ -39,9 +44,8 @@ public class FilmService {
         return filmStorage.update(film);
     }
 
-    //получение фильма по айди
-    public Film getFilmById(long id) {
-        return filmStorage.findFilmById(id);
+    public void removeAllFilms() {
+        filmStorage.removeAllFilms();
     }
 
     //метод добавляет лайк фильму
@@ -65,9 +69,10 @@ public class FilmService {
         return film;
     }
 
+    //получение списка самых популярных фильмов
     public List<Film> getTopFilms(Integer filmsCount) {
         Collection<Film> films = filmStorage.findAll();
-        log.info("Список десяти самых популярных фильмов:" );
+        log.info("Список десяти самых популярных фильмов:");
         return films.stream()
                 .sorted(this::compare)
                 .limit(filmsCount)

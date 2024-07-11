@@ -20,7 +20,7 @@ public class User {
     public User() {
     }
 
-    //конструктор для тестирования
+    //конструкторы для тестирования
     public User(String login, String email, String name, LocalDate birthday) {
         this.login = login;
         this.email = email;

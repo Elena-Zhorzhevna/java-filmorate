@@ -31,6 +31,6 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleException(Throwable e) {
         log.error("Возникло исключение");
-        return new ErrorResponse("Возникло исключение.", e.getMessage() );
+        return new ErrorResponse("Возникло исключение.", e.getMessage());
     }
 }

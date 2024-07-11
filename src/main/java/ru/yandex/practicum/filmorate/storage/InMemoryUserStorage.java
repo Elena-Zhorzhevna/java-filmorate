@@ -2,11 +2,8 @@ package ru.yandex.practicum.filmorate.storage;
 
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
-
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
-
 import ru.yandex.practicum.filmorate.model.User;
-
 import ru.yandex.practicum.filmorate.validator.UserValidator;
 
 import java.util.Collection;
@@ -59,7 +56,7 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User findUserById(Long userId) {
         return users.values().stream()
-                .filter(u -> u.getId()==(userId))
+                .filter(u -> u.getId() == (userId))
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException(String.format("Пользователь с id %d не найден", userId)));
     }
@@ -68,6 +65,12 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public boolean isFriend(long userId, long friendId) {
         return users.get(userId).getFriends().contains(friendId);
+    }
+
+    //удаление всех пользователей
+    @Override
+    public void removeAllUsers() {
+        users.clear();
     }
 
     // вспомогательный метод для генерации идентификатора нового пользователя

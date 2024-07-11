@@ -66,6 +66,12 @@ public class InMemoryFilmStorage implements FilmStorage {
         return films.get(filmId).getLikes().contains(userId);
     }
 
+    //удаляет все фильмы
+    @Override
+    public void removeAllFilms() {
+        films.clear();
+    }
+
     // вспомогательный метод для генерации идентификатора нового пользователя
     private Long getNextId() {
         long currentMaxId = films.keySet()

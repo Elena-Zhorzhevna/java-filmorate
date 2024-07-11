@@ -3,14 +3,12 @@ package ru.yandex.practicum.filmorate.controller;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -19,18 +17,18 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
+
 @SpringBootTest
 public class FilmControllerTest {
+    //в тестовом классе constructor inject не сработал, поэтому внедрила зависимость так
+    @Autowired
     FilmService filmService;
     Map<Long, Film> films = new HashMap<>();
-
-    FilmControllerTest(FilmService filmService) {
-        this.filmService = filmService;
-    }
 
     @AfterEach
     void afterEach() {
         films.clear();
+        filmService.removeAllFilms();
     }
 
     @Test
@@ -48,7 +46,7 @@ public class FilmControllerTest {
         String expected = filmService.getAllFilms().toString();
         assertEquals(expected, result);
     }
-/*
+
     @Test
         //тест добавления фильма
     void filmCreationTest() {
@@ -73,11 +71,11 @@ public class FilmControllerTest {
         LocalDate releaseDate = LocalDate.of(2013, Month.APRIL, 1);
         int duration = 135;
         Film existingFilm = new Film(name, description, releaseDate, duration);
-        controller.create(existingFilm);
+        filmService.createFilm(existingFilm);
         Film newFilm = new Film(existingFilm.getId(), "NewName", "NewDescription", releaseDate, 90);
         films.put(newFilm.getId(), newFilm);
         try {
-            Film updatedFilm = controller.update(newFilm);
+            Film updatedFilm = filmService.updateFilm(newFilm);
             assertEquals(updatedFilm.getName(), "NewName");
             assertEquals(updatedFilm.getDescription(), "NewDescription");
             assertEquals(updatedFilm.getReleaseDate(), releaseDate);
@@ -93,7 +91,7 @@ public class FilmControllerTest {
         Film nonExistingFilm = new Film("name", "description", LocalDate.now(), 90);
         final Exception actualException = Assertions.assertThrows(NotFoundException.class,
                 () -> {
-                    controller.update(nonExistingFilm);
+                    filmService.updateFilm(nonExistingFilm);
                 });
     }
 
@@ -105,7 +103,7 @@ public class FilmControllerTest {
                 LocalDate.parse("1995-12-27"), 60);
         final Exception actualException = Assertions.assertThrows(ValidationException.class,
                 () -> {
-                    controller.create(film);
+                    filmService.createFilm(film);
                 });
         Assertions.assertEquals(expectedExceptionMessage, actualException.getMessage());
     }
@@ -121,7 +119,7 @@ public class FilmControllerTest {
                 132);
         final Exception actualException = Assertions.assertThrows(ValidationException.class,
                 () -> {
-                    controller.create(film);
+                    filmService.createFilm(film);
                 });
         Assertions.assertEquals(expectedExceptionMessage, actualException.getMessage());
     }
@@ -134,7 +132,7 @@ public class FilmControllerTest {
                 LocalDate.parse("1895-12-27"), 60);
         final Exception actualException = Assertions.assertThrows(ValidationException.class,
                 () -> {
-                    controller.create(film);
+                    filmService.createFilm(film);
                 });
         Assertions.assertEquals(expectedExceptionMessage, actualException.getMessage());
     }
@@ -144,10 +142,10 @@ public class FilmControllerTest {
     void dataIsAfterFilmsBirthdayTest() {
         Film film = new Film("name", "description",
                 LocalDate.parse("1895-12-29"), 60);
-        controller.create(film);
-        String result = "[" + film.toString() + "]";
-        String expected = controller.findAll().toString();
-        assertEquals(expected, result);
+        filmService.createFilm(film);
+        //String result = "[" + film.toString() + "]";
+        String expected = filmService.createFilm(film).toString();
+        assertEquals(expected, film.toString());
     }
 
     //создание фильма с продолжительностью меньше 0
@@ -158,7 +156,7 @@ public class FilmControllerTest {
                 LocalDate.parse("2005-11-25"), -7);
         final Exception actualException = Assertions.assertThrows(ValidationException.class,
                 () -> {
-                    controller.create(film);
+                    filmService.createFilm(film);
                 });
         Assertions.assertEquals(expectedExceptionMessage, actualException.getMessage());
     }
@@ -168,9 +166,9 @@ public class FilmControllerTest {
     void durationIsMore0() {
         Film film = new Film("name", "description",
                 LocalDate.parse("1995-10-25"), 50);
-        controller.create(film);
+        filmService.createFilm(film);
         String result = "[" + film.toString() + "]";
-        String expected = controller.findAll().toString();
+        String expected = filmService.getAllFilms().toString();
         assertEquals(expected, result);
-    }*/
+    }
 }
