@@ -17,6 +17,10 @@ public class Film {
      */
     private long id;
     /**
+     * Идентификатор пользователя.
+     */
+    private long userId;
+    /**
      * Назваине фильма.
      */
     private String name;
@@ -60,20 +64,16 @@ public class Film {
     }
 
     /**
-     * Метод, добавляющий лайк указанному фильму.
-     *
-     * @param userId Идентификатор пользователя, лайк которого добавляется.
+     * Метод, добавляющий лайк фильму.
      */
     public void addLike(Long userId) {
-        likes.add(id);
+        likes.add(userId);
     }
 
     /**
-     * Метод, удаляющий лайк у указанного фильма.
-     *
-     * @param id Идентификатор пользователя, лайк которого удаляется.
+     * Метод, удаляющий лайк у фильма.
      */
-    public void deleteLike(Long id) {
-        likes.remove(id);
+    public void deleteLike(Long userId) {
+        likes.remove(userId);
     }
 }

@@ -112,6 +112,7 @@ public class FilmService {
      * @param filmsCount Количество возвращаемых популярных фильмов, по умолчанию - 10.
      * @return Список самых популярных фильмов по количеству лайков.
      */
+
     public List<Film> getTopFilms(Integer filmsCount) {
         Collection<Film> films = filmStorage.findAll();
         log.info("Список десяти самых популярных фильмов:");
