@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Сервисный класс, который обрабатывает операции и взаимодействия, связанные с пользователями.
+ */
 @Service
 public class UserService {
     private final UserStorage userStorage;
@@ -20,32 +23,59 @@ public class UserService {
         this.userStorage = userStorage;
     }
 
-    //получение всех пользователей
-    public Collection<User> getAllUsers() { //List?
+    /**
+     * Получение всех пользователей.
+     *
+     * @return Коллекция пользователей.
+     */
+    public Collection<User> getAllUsers() {
         return userStorage.findAll();
     }
 
-    //получение пользователя по айди
+    /**
+     * Получение пользователя по идентификатору.
+     *
+     * @param id Идентификатор пользователя.
+     * @return Пользователь с заданным идентификатором.
+     */
     public User getUserById(long id) {
         return userStorage.findUserById(id);
     }
 
-    //добавление пользователя
+    /**
+     * Добавление пользователя.
+     *
+     * @param user Добавляемый пользователь.
+     * @return Добавленный пользователь.
+     */
     public User addUser(User user) {
         return userStorage.create(user);
     }
 
-    //обновление пользователя
+    /**
+     * Обновление существующего пользователя.
+     *
+     * @param user Пользователь с обновленными данными.
+     * @return Обновленный пользователь.
+     */
     public User updateUser(User user) {
         return userStorage.update(user);
     }
 
-    //удаление всех пользователей
+    /**
+     * Удаление всех пользователей.
+     */
     public void removeAllUsers() {
         userStorage.removeAllUsers();
     }
 
-    //метод добавления пользователя в друзья
+    /**
+     * Добавление пользователя в друзья.
+     *
+     * @param userId   Идентификатор пользователя, который добавляет друга.
+     * @param friendId Идентификатор добавляемого друга.
+     * @return Обновленные данные пользователя.
+     */
     public User addFriend(Long userId, Long friendId) {
         User user = userStorage.findUserById(userId);
         User friend = userStorage.findUserById(friendId);
@@ -58,7 +88,13 @@ public class UserService {
         return user;
     }
 
-    //метод удаления пользователя из друзей
+    /**
+     * Удаление пользователя из друзей.
+     *
+     * @param userId   Идентификатор пользователя, который хочет удалить друга.
+     * @param friendId Идентификатор друга, который должан быть удален.
+     * @return Обновленные данные пользователя.
+     */
     public User removeFriend(Long userId, Long friendId) {
         User user = userStorage.findUserById(userId);
         User friend = userStorage.findUserById(friendId);
@@ -68,7 +104,13 @@ public class UserService {
         return user;
     }
 
-    //метод выводит список общих друзей
+    /**
+     * Получение списка общих друзей пользователей.
+     *
+     * @param userId   Идентификатор первого пользователя.
+     * @param friendId Идентификатор второго пользователя.
+     * @return Список общих друзей двух пользователей.
+     */
     public List<User> getCommonFriends(Long userId, Long friendId) {
         User user = userStorage.findUserById(userId);
         User friend = userStorage.findUserById(friendId);
@@ -82,7 +124,12 @@ public class UserService {
         return commonFriendsList;
     }
 
-    //метод выводит список друзей пользователя
+    /**
+     * Получение друзей пользователя, чей идентификатор указан.
+     *
+     * @param userId Идентификатор пользователя, чьи друзья должны быть получены.
+     * @return Список друзей пользователя.
+     */
     public List<User> getUsersFriends(Long userId) {
         User user = userStorage.findUserById(userId);
         List<User> friendsList = new ArrayList<>();

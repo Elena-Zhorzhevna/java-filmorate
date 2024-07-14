@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest
 public class FilmControllerTest {
-    //в тестовом классе constructor inject не сработал, поэтому внедрила зависимость так
     @Autowired
     FilmService filmService;
     Map<Long, Film> films = new HashMap<>();
@@ -31,8 +30,10 @@ public class FilmControllerTest {
         filmService.removeAllFilms();
     }
 
+    /**
+     * Тест получения всех фильмов.
+     */
     @Test
-        //тест получения всех фильмов
     void findAllFilmsTest() {
         Film film1 = new Film("testFilm1", "Comedy",
                 LocalDate.of(1995, Month.MAY, 12), 180);
@@ -47,8 +48,10 @@ public class FilmControllerTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Тест добавления фильма.
+     */
     @Test
-        //тест добавления фильма
     void filmCreationTest() {
         String name = "TestFilmForCreation";
         String description = "TestDescription";
@@ -63,8 +66,10 @@ public class FilmControllerTest {
         }
     }
 
+    /**
+     * Тест обновления существующего фильма.
+     */
     @Test
-    //тест обновления существующего фильма
     public void updateExistingFilmTest() {
         String name = "TestFilmToUpdate";
         String description = "TestDescription";
@@ -85,7 +90,9 @@ public class FilmControllerTest {
         }
     }
 
-    //тест обновления несуществующего фильма
+    /**
+     * Тест обновления несуществующего фильма.
+     */
     @Test
     void nonExistingFilmUpdateTest() {
         Film nonExistingFilm = new Film("name", "description", LocalDate.now(), 90);
@@ -95,7 +102,9 @@ public class FilmControllerTest {
                 });
     }
 
-    //создание фильма с пустым полем name
+    /**
+     * Создание фильма с пустым полем name.
+     */
     @Test
     void nameIsBlankTest() {
         String expectedExceptionMessage = "Название фильма не может быть пустым.";
@@ -108,7 +117,9 @@ public class FilmControllerTest {
         Assertions.assertEquals(expectedExceptionMessage, actualException.getMessage());
     }
 
-    //создание фильма с описанием длиннее 200 символов
+    /**
+     * Создание фильма с описанием длиннее 200 символов.
+     */
     @Test
     void descriptionIsMore200Test() {
         String expectedExceptionMessage = "Максимальная длина описания - 200 символов.";
@@ -124,7 +135,9 @@ public class FilmControllerTest {
         Assertions.assertEquals(expectedExceptionMessage, actualException.getMessage());
     }
 
-    //создание фильма с датой релиза раньше даты создания кино
+    /**
+     * Создание фильма с датой релиза раньше даты создания кино.
+     */
     @Test
     void dataIsBeforeFilmsBirthdayTest() {
         String expectedExceptionMessage = "Дата релиза не может быть раньше создания кино.";
@@ -137,18 +150,21 @@ public class FilmControllerTest {
         Assertions.assertEquals(expectedExceptionMessage, actualException.getMessage());
     }
 
-    //создание фильма с датой релиза позже даты создания кино
+    /**
+     * Создание фильма с датой релиза позже даты создания кино.
+     */
     @Test
     void dataIsAfterFilmsBirthdayTest() {
         Film film = new Film("name", "description",
                 LocalDate.parse("1895-12-29"), 60);
         filmService.createFilm(film);
-        //String result = "[" + film.toString() + "]";
         String expected = filmService.createFilm(film).toString();
         assertEquals(expected, film.toString());
     }
 
-    //создание фильма с продолжительностью меньше 0
+    /**
+     * Создание фильма с продолжительностью меньше 0.
+     */
     @Test
     void durationIsLess0() {
         String expectedExceptionMessage = "Продолжительность фильма должна быть положительным числом.";
@@ -161,7 +177,9 @@ public class FilmControllerTest {
         Assertions.assertEquals(expectedExceptionMessage, actualException.getMessage());
     }
 
-    //создание фильма с продолжительностью больше 0
+    /**
+     * Создание фильма с продолжительностью больше 0.
+     */
     @Test
     void durationIsMore0() {
         Film film = new Film("name", "description",

@@ -4,16 +4,38 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.Collection;
 
+/**
+ * Интерфейс, в котором определены методы добавления, удаления и модификации объектов User.
+ */
 public interface UserStorage {
-    Collection<User> findAll(); //получение всех пользователей
 
-    User create(User user); //добавление пользователя
+    /**
+     * Получение всех пользователей.
+     */
+    Collection<User> findAll();
 
-    User update(User newUser); //обновление пользователя
+    /**
+     * Добавление пользователя.
+     */
+    User create(User user);
 
-    User findUserById(Long userId); //получение пользователя по айди
+    /**
+     * Обновление пользователя.
+     */
+    User update(User newUser);
 
-    boolean isFriend(long filmId, long userId); //проверка, являются ли пользователи друзьями
+    /**
+     * Получение пользователя по айди.
+     */
+    User findUserById(Long userId);
 
-    void removeAllUsers(); //удаление всех пользователей
+    /**
+     * Метод, проверяющий, являются ли пользователи друзьями.
+     */
+    boolean isFriend(long filmId, long userId);
+
+    /**
+     * Удаление всех пользователей.
+     */
+    void removeAllUsers();
 }

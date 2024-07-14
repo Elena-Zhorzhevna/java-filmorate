@@ -10,18 +10,30 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Имплементирует интерфейс UserStorage, содержит логику хранения, обновления и поиска объектов User.
+ */
 @Component
 public class InMemoryUserStorage implements UserStorage {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(InMemoryUserStorage.class);
     private final Map<Long, User> users = new HashMap<>();
 
-    //получение всех пользователей
+    /**
+     * Получение всех пользователей.
+     *
+     * @return Коллекция пользователей.
+     */
     @Override
     public Collection<User> findAll() {
         return users.values();
     }
 
-    //добавление пользователя
+    /**
+     * Добавление пользователя.
+     *
+     * @param user Добавляемый пользователь.
+     * @return Добавленный пользователь.
+     */
     @Override
     public User create(User user) {
         log.info("Получен запрос на добавление пользователя: {}", user);
@@ -33,7 +45,12 @@ public class InMemoryUserStorage implements UserStorage {
         return user;
     }
 
-    //обновление пользователя
+    /**
+     * Обновление существующего пользователя.
+     *
+     * @param newUser Пользователь с обновленными данными.
+     * @return Обновленный пользователь.
+     */
     @Override
     public User update(User newUser) {
         log.info("Получен запрос на обновление пользователя: {}", newUser);
@@ -52,7 +69,12 @@ public class InMemoryUserStorage implements UserStorage {
         throw new NotFoundException("Пользователь с id = " + newUser.getId() + " не найден");
     }
 
-    //получение пользователя по айди
+    /**
+     * Получение пользователя по идентификатору.
+     *
+     * @param userId Идентификатор пользователя.
+     * @return Пользователь с заданным идентификатором.
+     */
     @Override
     public User findUserById(Long userId) {
         return users.values().stream()
@@ -61,19 +83,31 @@ public class InMemoryUserStorage implements UserStorage {
                 .orElseThrow(() -> new NotFoundException(String.format("Пользователь с id %d не найден", userId)));
     }
 
-    //возвращает true, если пользователь уже находится в списке друзей другого пользователя
+    /**
+     * Проверка, являются ли пользователи друзьями.
+     *
+     * @param userId   Идентификатор первого пользователя.
+     * @param friendId Идентификатор второго пользователя.
+     * @return Являются ли пользователи друзьями.
+     */
     @Override
     public boolean isFriend(long userId, long friendId) {
         return users.get(userId).getFriends().contains(friendId);
     }
 
-    //удаление всех пользователей
+    /**
+     * Удаление всех пользователей.
+     */
     @Override
     public void removeAllUsers() {
         users.clear();
     }
 
-    // вспомогательный метод для генерации идентификатора нового пользователя
+    /**
+     * Вспомогательный метод для генерации идентификатора нового пользователя.
+     *
+     * @return Новый уникальный идентификатор пользователя.
+     */
     private Long getNextId() {
         long currentMaxId = users.keySet()
                 .stream()

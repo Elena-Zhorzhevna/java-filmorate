@@ -6,8 +6,16 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 
+/**
+ * Класс для валидации объекта User.
+ */
 public class UserValidator {
-    // проверяем выполнение необходимых условий
+    /**
+     * Проверяем выполнение необходимых условий.
+     *
+     * @param user Пользователь, для которого нужна проверка валидации.
+     * @return Является ли объект удовлетворяющим требованиям.
+     */
     public static boolean isValidUser(@RequestBody User user) {
 
         if (!isValidEmail(user.getEmail())) {
@@ -28,7 +36,12 @@ public class UserValidator {
         return true;
     }
 
-    //электронная почта не может быть пустой и должна содержать символ @
+    /**
+     * Электронная почта не может быть пустой и должна содержать символ @.
+     *
+     * @param email Проверяемая электронная почта.
+     * @return Является ли проверяемая почта удовлетворяющей условиям.
+     */
     private static boolean isValidEmail(String email) {
         if (email == null || email.trim().isEmpty()) {
             return false;
@@ -37,17 +50,32 @@ public class UserValidator {
         }
     }
 
-    //логин не пустой и не содержит пробелы
+    /**
+     * Логин не пустой и не содержит пробелы.
+     *
+     * @param login Проверяемый логин.
+     * @return Является ли проверяемый логин удовлетворяющим условиям.
+     */
     private static boolean isValidLogin(String login) {
         return !login.isEmpty() && !login.contains(" ");
     }
 
-    //имя для отображения может быть пустым — в таком случае будет использован логин
+    /**
+     * Имя для отображения может быть пустым — в таком случае будет использован логин.
+     *
+     * @param name Проверяемое имя.
+     * @return Является ли проверяемое имя удовлетворяющим условиям.
+     */
     private static boolean isEmptyName(String name) {
         return (name == null || name.isEmpty());
     }
 
-    //дата рождения не может быть в будущем
+    /**
+     * Дата рождения не может быть в будущем.
+     *
+     * @param birthday Проверяемая дата рождения.
+     * @return Является ли проверяемая дата рождения удовлетворяющей условиям.
+     */
     private static boolean isValidBirthday(LocalDate birthday) {
         return birthday.isBefore(LocalDate.now());
     }

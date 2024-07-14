@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 
+/**
+ * Обработчик ошибок.
+ */
 @RestControllerAdvice
-//обработчик ошибок
+
 public class ErrorHandler {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(Error.class);
 

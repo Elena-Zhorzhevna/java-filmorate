@@ -7,20 +7,43 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Представляет фильмы в приложении Filmorate.
+ */
 @Data
 public class Film {
-    private long id; //идентификатор
-    private String name; //название
-    private String description; //описание
-    private LocalDate releaseDate; //дата релиза
-    private int duration; //продолжительность
-    private Set<Long> likes = new HashSet<>(); //свойство, содержащее список id пользователей, поставивших лайк
+    /**
+     * Идентификатор фильма.
+     */
+    private long id;
+    /**
+     * Назваине фильма.
+     */
+    private String name;
+    /**
+     * Описание фильма.
+     */
+    private String description;
+    /**
+     * Дата релиза фильма.
+     */
+    private LocalDate releaseDate;
+    /**
+     * Продолжительность фильма.
+     */
+    private int duration;
+    /**
+     * Свойство, содержащее список идентификаторов пользователей, поставивших лайк.
+     */
+    private Set<Long> likes = new HashSet<>();
 
     @JsonCreator
     public Film() {
     }
 
-    //конструкторы для тестирования
+    /**
+     * Конструкторы для тестов.
+     */
     public Film(long id, String name, String description, LocalDate releaseDate, int duration) {
         this.id = id;
         this.name = name;
@@ -36,10 +59,20 @@ public class Film {
         this.duration = duration;
     }
 
-    public void addLike(Long id) {
+    /**
+     * Метод, добавляющий лайк указанному фильму.
+     *
+     * @param userId Идентификатор пользователя, лайк которого добавляется.
+     */
+    public void addLike(Long userId) {
         likes.add(id);
     }
 
+    /**
+     * Метод, удаляющий лайк у указанного фильма.
+     *
+     * @param id Идентификатор пользователя, лайк которого удаляется.
+     */
     public void deleteLike(Long id) {
         likes.remove(id);
     }

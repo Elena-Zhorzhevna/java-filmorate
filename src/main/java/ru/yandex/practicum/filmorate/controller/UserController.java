@@ -8,6 +8,9 @@ import ru.yandex.practicum.filmorate.service.UserService;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Класс контроллера для управления пользователями в приложении Filmorate.
+ */
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -18,49 +21,91 @@ public class UserController {
         this.userService = userService;
     }
 
-    //получение всех пользователей
+    /**
+     * Обрабатывает GET-запросы для получения всех пользователей.
+     *
+     * @return Коллекция всех пользователей.
+     */
     @GetMapping
     public Collection<User> findAll() {
         return userService.getAllUsers();
     }
 
-    //получение пользователя по id
+    /**
+     * Обрабатывает GET-запросы для получения пользователя по идентификатору.
+     *
+     * @param userId Идентификатор пользователя.
+     * @return Пользователь с указанным идентификатором.
+     */
     @GetMapping("/{userId}")
     public User getUserById(@PathVariable("userId") long userId) {
         return userService.getUserById(userId);
     }
 
-    //добавление пользователя
+    /**
+     * Обрабатывает POST-запросы для добавления пользователя.
+     *
+     * @param user Пользователь, который должен быть добавлен.
+     * @return Добавляемый пользователь.
+     */
     @PostMapping
     public User create(@RequestBody User user) {
         return userService.addUser(user);
     }
 
-    //обновление пользователя
+    /**
+     * Обрабатывает PUT-запросы на обновление существующего пользователя.
+     *
+     * @param newUser Пользователь с обновленной информацией.
+     * @return Обновленный пользователь.
+     */
     @PutMapping
     public User update(@RequestBody User newUser) {
         return userService.updateUser(newUser);
     }
 
-    //добавление в друзья
+    /**
+     * Обрабатывает PUT-запрос на добавление пользователя в друзья другому пользователю с указанными инентификаторами.
+     *
+     * @param userId   Идентификатор пользователя, который добавляет друга.
+     * @param friendId Идентификатор добавляемого друга.
+     * @return Обновленные данные пользователя.
+     */
     @PutMapping("/{userId}/friends/{friendId}")
     public User addFriend(@PathVariable("userId") long userId, @PathVariable("friendId") long friendId) {
         return userService.addFriend(userId, friendId);
     }
 
-    //удаление из друзей
+    /**
+     * Обрабатывает DELETE-запрос для удаления указанного друга из списка друзей пользователя.
+     *
+     * @param userId   Идентификатор пользователя, который хочет удалить друга.
+     * @param friendId Идентификатор друга, который должан быть удален.
+     * @return Обновленные данные пользователя.
+     */
     @DeleteMapping("/{userId}/friends/{friendId}")
     public User removeFriend(@PathVariable("userId") long userId, @PathVariable("friendId") long friendId) {
         return userService.removeFriend(userId, friendId);
     }
 
-    //возвращение списка друзей пользователя
+    /**
+     * Обрабатывает GET-запросы для поиска друзей пользователя, чей идентификатор указан.
+     *
+     * @param userId Идентификатор пользователя, чьи друзья должны быть получены.
+     * @return Список друзей пользователя.
+     */
     @GetMapping("/{userId}/friends")
     public List<User> getFriends(@PathVariable long userId) {
         return userService.getUsersFriends(userId);
     }
 
-    //получение списка общих друзей двух пользователей
+    /**
+     * Обрабатывает GET-запрос для получения списка общих друзей двух пользователей.
+     *
+     * @param userId  Идентификатор первого пользователя.
+     * @param otherId Идентификатор второго пользователя.
+     * @return Список общих друзей двух пользователей.
+     */
     @GetMapping("/{userId}/friends/common/{otherId}")
     public List<User> getCommonFriends(@PathVariable long userId, @PathVariable long otherId) {
         return userService.getCommonFriends(userId, otherId);

@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest
 public class UserControllerTest {
-    //в тестовом классе constructor inject не сработал, поэтому внедрила зависимость так
     @Autowired
     UserService userService;
     Map<Long, User> users = new HashMap<>();
@@ -31,7 +30,9 @@ public class UserControllerTest {
         userService.removeAllUsers();
     }
 
-    //тест получения всех пользователей
+    /**
+     * Тест получения всех пользователей.
+     */
     @Test
     void findAllUsersTest() {
         User user1 = new User(1, "Jack", "flower@m.ru",
@@ -48,7 +49,9 @@ public class UserControllerTest {
         assertEquals(expected, result);
     }
 
-    //тест создания пользователя
+    /**
+     * Тест создания пользователя.
+     */
     @Test
     void userCreationTest() {
         String email = "test@example.ru";
@@ -63,7 +66,9 @@ public class UserControllerTest {
         }
     }
 
-    //тест обновления существующего пользователя
+    /**
+     * Тест обновления существующего пользователя.
+     */
     @Test
     void updateExistingUserTest() {
         String login = "TestUserToUpdate";
@@ -84,7 +89,9 @@ public class UserControllerTest {
         }
     }
 
-    //обновление несуществующего пользователя
+    /**
+     * Тест обновления несуществующего пользователя.
+     */
     @Test
     void nonExistingUserUpdateTest() {
         User nonExistingUser = new User("login", "test@email.ru",
@@ -95,7 +102,9 @@ public class UserControllerTest {
                 });
     }
 
-    //создание пользователя с датой рождения в будущем
+    /**
+     * Тест создания пользователя с датой рождения в будущем.
+     */
     @Test
     public void futureBirthdayTest() {
         String expectedExceptionMessage = "Дата рождения не может быть в будущем.";
@@ -109,7 +118,9 @@ public class UserControllerTest {
         Assertions.assertEquals(expectedExceptionMessage, actualException.getMessage());
     }
 
-    //создание пользователя с недопустимым логином
+    /**
+     * Тест создания пользователя с недопустимым логином.
+     */
     @Test
     public void loginWithSpacesTest() {
         String expectedExceptionMessage = "Логин пустой или содержит пробелы.";
@@ -122,7 +133,9 @@ public class UserControllerTest {
         Assertions.assertEquals(expectedExceptionMessage, actualException.getMessage());
     }
 
-    //создание пользователя с недопустимым форматом электронной почты
+    /**
+     * Тест создания пользователя с недопустимым форматом электронной почты.
+     */
     @Test
     public void invalidEmailTest() {
         String expectedExceptionMessage = "Имейл не указан или введен некорректно.";
@@ -135,7 +148,9 @@ public class UserControllerTest {
         Assertions.assertEquals(expectedExceptionMessage, actualException.getMessage());
     }
 
-    //имя для отображения может быть пустым — в таком случае будет использован логин
+    /**
+     * Тест, что имя для отображения может быть пустым — в таком случае будет использован логин.
+     */
     @Test
     public void nameCanBeEmpty() {
         User testUser = new User("test@email.ru", "testLogin", LocalDate.parse("1995-11-12"));

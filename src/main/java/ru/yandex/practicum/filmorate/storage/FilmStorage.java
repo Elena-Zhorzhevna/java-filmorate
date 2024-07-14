@@ -4,16 +4,37 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.Collection;
 
+/**
+ * Интерфейс, в котором определены методы добавления, удаления и модификации объектов Film.
+ */
 public interface FilmStorage {
-    Collection<Film> findAll(); //получение всех фильмов
+    /**
+     * Получение всех фильмов.
+     */
+    Collection<Film> findAll();
 
-    Film create(Film film); //добавление фильма
+    /**
+     * Добавление фильма.
+     */
+    Film create(Film film);
 
-    Film update(Film newFilm); //обновление фильма
+    /**
+     * Обновление фильма.
+     */
+    Film update(Film newFilm);
 
-    Film findFilmById(Long filmId); //получение фильма по айди
+    /**
+     * Получение фильма по идентификатору.
+     */
+    Film findFilmById(Long filmId);
 
-    boolean isLiked(long filmId, long userId); //проверяет, есть ли у фильма лайк от данного пользователя
+    /**
+     * Метод, проверяющий наличие лайка у данного пользователя.
+     */
+    boolean isLiked(long filmId, long userId);
 
-    void removeAllFilms(); //удаление всех фильмов
+    /**
+     * Удаление всех фильмов.
+     */
+    void removeAllFilms();
 }
