@@ -1,33 +1,49 @@
 package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
+/**
+ * Представляет пользователей в приложении Filmorate.
+ */
+@Data
 public class User {
-    private int id; //идентификатор
-    private String login; //логин пользователя
-    private String email; //электронная почта пользователя
-    private String name; //имя для отображения
-    private LocalDate birthday; //дата рождения
+    /**
+     * Идентификатор пользователя.
+     */
+    private long id;
+    /**
+     * Логин пользователя.
+     */
+    private String login;
+    /**
+     * Электронная почта пользователя.
+     */
+    private String email;
+    /**
+     * Имя для отображения пользователя.
+     */
+    private String name;
+    /**
+     * Дата рождения пользователя.
+     */
+    private LocalDate birthday;
+    /**
+     * Свойство, содержащее список идентификаторов друзей пользователя.
+     */
+    private Set<Long> friends = new HashSet<>();
 
     @JsonCreator
     public User() {
     }
 
-    public User(int id, String login, String email, LocalDate birthday) {
-        this.id = id;
-        this.login = login;
-        this.email = email;
-        this.birthday = birthday;
-    }
-
-    public User(String login, String email, LocalDate birthday) {
-        this.login = login;
-        this.email = email;
-        this.birthday = birthday;
-    }
-
+    /**
+     * Конструкторы для тестирования.
+     */
     public User(String login, String email, String name, LocalDate birthday) {
         this.login = login;
         this.email = email;
@@ -35,92 +51,34 @@ public class User {
         this.birthday = birthday;
     }
 
-    public int getId() {
-        return this.id;
-    }
-
-    public String getEmail() {
-        return this.email;
-    }
-
-    public String getLogin() {
-        return this.login;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public LocalDate getBirthday() {
-        return this.birthday;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setLogin(String login) {
+    public User(String email, String login, LocalDate birthday) {
         this.login = login;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setBirthday(LocalDate birthday) {
+        this.email = email;
         this.birthday = birthday;
     }
 
-    public boolean equals(final Object o) {
-        if (o == this) return true;
-        if (!(o instanceof User)) return false;
-        final User other = (User) o;
-        if (!other.canEqual((Object) this)) return false;
-        if (this.getId() != other.getId()) return false;
-        final Object this$email = this.getEmail();
-        final Object other$email = other.getEmail();
-        if (this$email == null ? other$email != null : !this$email.equals(other$email)) return false;
-        final Object this$login = this.getLogin();
-        final Object other$login = other.getLogin();
-        if (this$login == null ? other$login != null : !this$login.equals(other$login)) return false;
-        final Object this$name = this.getName();
-        final Object other$name = other.getName();
-        if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
-        final Object this$birthday = this.getBirthday();
-        final Object other$birthday = other.getBirthday();
-        if (this$birthday == null ? other$birthday != null : !this$birthday.equals(other$birthday)) return false;
-        return true;
+    public User(long id, String login, String email, LocalDate birthday) {
+        this.id = id;
+        this.login = login;
+        this.email = email;
+        this.birthday = birthday;
     }
 
-    protected boolean canEqual(final Object other) {
-        return other instanceof User;
+    /**
+     * Метод, добавляющий идентификатор пользователя в свойство friends.
+     *
+     * @param id Идентификатор пользователя, который добавляется в друзья.
+     */
+    public void addFriend(Long id) {
+        friends.add(id);
     }
 
-    public int hashCode() {
-        final int PRIME = 59;
-        int result = 1;
-        result = result * PRIME + this.getId();
-        final Object $email = this.getEmail();
-        result = result * PRIME + ($email == null ? 43 : $email.hashCode());
-        final Object $login = this.getLogin();
-        result = result * PRIME + ($login == null ? 43 : $login.hashCode());
-        final Object $name = this.getName();
-        result = result * PRIME + ($name == null ? 43 : $name.hashCode());
-        final Object $birthday = this.getBirthday();
-        result = result * PRIME + ($birthday == null ? 43 : $birthday.hashCode());
-        return result;
-    }
-
-    public String toString() {
-        return "User(id=" + this.getId() +
-                ", email=" + this.getEmail() +
-                ", login=" + this.getLogin() +
-                ", name=" + this.getName() +
-                ", birthday=" + this.getBirthday() +
-                ")";
+    /**
+     * Метод, удаляющий индентификатор пользователя из свойства friends.
+     *
+     * @param id Идентификатор пользователя, который удаляется из друзей.
+     */
+    public void deleteFriend(Long id) {
+        friends.remove(id);
     }
 }
