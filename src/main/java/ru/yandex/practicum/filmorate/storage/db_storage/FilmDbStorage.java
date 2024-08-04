@@ -55,7 +55,7 @@ public class FilmDbStorage extends BaseDbStorage<Film> implements FilmStorage {
                 film.getDuration(),
                 film.getReleaseDate(),
                 film.getDuration(),
-                film.getRatingMpa()
+                film.getMpa().getId()
         );
         film.setId(id);
         log.info("Добавлен фильм: {}", film);

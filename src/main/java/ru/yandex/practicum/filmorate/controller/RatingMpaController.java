@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.service.RatingMpaService;
-import ru.yandex.practicum.filmorate.storage.dto.modelDto.RatingMpaDto;
+import ru.yandex.practicum.filmorate.storage.dto.modelDto.MpaDto;
 
 import java.util.Collection;
 
@@ -25,7 +25,7 @@ public class RatingMpaController {
      * @return Коллекция всех рейтингов.
      */
     @GetMapping
-    public Collection<RatingMpaDto> getRatingsMpa() {
+    public Collection<MpaDto> getRatingsMpa() {
         return mpaService.getAllRatingsMpa();
     }
 
@@ -35,7 +35,7 @@ public class RatingMpaController {
      * @return Рейтинг с указанным идентификатором.
      */
     @GetMapping("/{id}")
-    public RatingMpaDto getRatingMpa(@PathVariable int id) {
+    public MpaDto getRatingMpa(@PathVariable int id) {
         return mpaService.getRatingMpa(id);
     }
 }

@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.storage.dto.modelDto;
 import lombok.Data;
 
 @Data
-public class RatingMpaDto {
+public class MpaDto {
     private int id;
     private String name;
 }

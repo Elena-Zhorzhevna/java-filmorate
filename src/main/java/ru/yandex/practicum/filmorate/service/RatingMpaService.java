@@ -3,8 +3,9 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.storage.db_storage.RatingMpaDbStorage;
-import ru.yandex.practicum.filmorate.storage.dto.mapperDto.RatingMpaDtoMapper;
-import ru.yandex.practicum.filmorate.storage.dto.modelDto.RatingMpaDto;
+import ru.yandex.practicum.filmorate.storage.dto.mapperDto.MpaDtoMapper;
+import ru.yandex.practicum.filmorate.storage.dto.modelDto.MpaDto;
+
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -18,14 +19,14 @@ public class RatingMpaService {
         this.mpaDbStorage = mpaDbStorage;
     }
 
-    public Collection<RatingMpaDto> getAllRatingsMpa() {
+    public Collection<MpaDto> getAllRatingsMpa() {
         return mpaDbStorage.getAllRatings().stream()
-                .map(RatingMpaDtoMapper::mapToMpaDto)
-                .sorted(Comparator.comparingInt(RatingMpaDto::getId))
+                .map(MpaDtoMapper::mapToMpaDto)
+                .sorted(Comparator.comparingInt(MpaDto::getId))
                 .collect(Collectors.toList());
     }
 
-    public RatingMpaDto getRatingMpa(int id) {
-        return RatingMpaDtoMapper.mapToMpaDto(mpaDbStorage.getRatingMpa(id));
+    public MpaDto getRatingMpa(int id) {
+        return MpaDtoMapper.mapToMpaDto(mpaDbStorage.getRatingMpa(id));
     }
 }

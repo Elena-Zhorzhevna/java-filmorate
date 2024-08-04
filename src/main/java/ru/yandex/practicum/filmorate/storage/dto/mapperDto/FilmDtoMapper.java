@@ -12,7 +12,7 @@ public class FilmDtoMapper {
         filmDto.setDuration(film.getDuration());
         filmDto.setReleaseDate(film.getReleaseDate());
         filmDto.setLikes(film.getLikes());
-        filmDto.setRatingMpa(film.getRatingMpa());
+        filmDto.setMpa(film.getMpa());
         filmDto.setGenres(film.getGenres());
         return filmDto;
     }

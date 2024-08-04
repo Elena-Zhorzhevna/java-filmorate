@@ -5,32 +5,33 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.model.RatingMpa;
+import ru.yandex.practicum.filmorate.model.Mpa;
+
 
 import java.util.Collection;
-import java.util.Optional;
+
 
 @Log4j2
 @Repository
-public class RatingMpaDbStorage extends BaseDbStorage<RatingMpa> {
+public class RatingMpaDbStorage extends BaseDbStorage<Mpa> {
     private static final String SELECT_RATING_MPA = "SELECT * FROM rating_mpa WHERE rating_id = ?";
     private static final String SELECT_ALL_RATINGS = "SELECT * FROM rating_mpa";
 
-    public RatingMpaDbStorage(JdbcTemplate jdbc, RowMapper<RatingMpa> mapper) {
+    public RatingMpaDbStorage(JdbcTemplate jdbc, RowMapper<Mpa> mapper) {
         super(jdbc, mapper);
     }
 
-    public RatingMpa getRatingMpa(int id) {
-        RatingMpa ratingMpa = findOne(SELECT_RATING_MPA, id);
-        if (ratingMpa != null) {
-            return ratingMpa;
+    public Mpa getRatingMpa(int id) {
+        Mpa Mpa = findOne(SELECT_RATING_MPA, id);
+        if (Mpa != null) {
+            return Mpa;
         } else {
             log.error("Рейтинг с ID = " + id + " не найден");
             throw new NotFoundException("Рейтинг с данным id не найден");
         }
     }
 
-    public Collection<RatingMpa> getAllRatings() {
+    public Collection<Mpa> getAllRatings() {
         return findMany(SELECT_ALL_RATINGS);
     }
 }

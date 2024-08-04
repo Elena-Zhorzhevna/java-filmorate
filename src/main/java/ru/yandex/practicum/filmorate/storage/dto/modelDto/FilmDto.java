@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.storage.dto.modelDto;
 
 import lombok.Data;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.RatingMpa;
+import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -17,5 +17,5 @@ public class FilmDto {
     private int duration;
     private Set<Long> likes = new HashSet<>();
     private Set<Genre> genres = new HashSet<>();
-    private RatingMpa ratingMpa;
+    private Mpa mpa;
 }

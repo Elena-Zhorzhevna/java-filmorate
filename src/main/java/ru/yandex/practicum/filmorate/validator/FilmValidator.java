@@ -91,14 +91,16 @@ public final class FilmValidator {
     private static boolean isValidDuration(int duration) {
         return duration > 0;
     }
+}
 
+/*
 
     private static boolean isValidRatingMpa(Film film) {
-        return !(film.getRatingMpa() == null || film.getRatingMpa().getName().isBlank());
+        return !(film.getMpa() == null || film.getMpa().getName().isBlank());
 
     }
 
     private static boolean isValidGenre(Film film) {
         return !(film.getGenres() == null || film.getGenres().isEmpty());
     }
-}
+}*/

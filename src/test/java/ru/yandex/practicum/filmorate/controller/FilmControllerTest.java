@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.dto.modelDto.FilmDto;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -80,7 +81,7 @@ public class FilmControllerTest {
         Film newFilm = new Film(existingFilm.getId(), "NewName", "NewDescription", releaseDate, 90);
         films.put(newFilm.getId(), newFilm);
         try {
-            Film updatedFilm = filmService.updateFilm(newFilm);
+            FilmDto updatedFilm = filmService.updateFilm(newFilm);
             assertEquals(updatedFilm.getName(), "NewName");
             assertEquals(updatedFilm.getDescription(), "NewDescription");
             assertEquals(updatedFilm.getReleaseDate(), releaseDate);

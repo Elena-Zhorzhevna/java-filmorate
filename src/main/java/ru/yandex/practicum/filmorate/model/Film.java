@@ -44,7 +44,7 @@ public class Film {
      * Свойство — рейтинг Ассоциации кинокомпаний.
      * Эта оценка определяет возрастное ограничение для фильма.
      */
-    private RatingMpa ratingMpa;
+    private Mpa Mpa;
     /**
      * Свойство — «жанр». У фильма может быть сразу несколько жанров.
      */
@@ -73,13 +73,13 @@ public class Film {
     }
 
     public Film(String name, String description, LocalDate releaseDate, int duration, Set<Long> likes,
-                RatingMpa ratingMpa, Set<Genre> genres) {
+                Mpa Mpa, Set<Genre> genres) {
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
         this.likes = likes;
-        this.ratingMpa = ratingMpa;
+        this.Mpa = Mpa;
         this.genres = genres;
     }
 
