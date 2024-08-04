@@ -2,9 +2,11 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
+
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 
@@ -12,7 +14,6 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
  * Обработчик ошибок.
  */
 @RestControllerAdvice
-
 public class ErrorHandler {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(Error.class);
 
@@ -32,7 +33,7 @@ public class ErrorHandler {
 
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleException(Throwable e) {
+    public ErrorResponse handleException(final Throwable e) {
         log.error("Возникло исключение");
         return new ErrorResponse("Возникло исключение.", e.getMessage());
     }

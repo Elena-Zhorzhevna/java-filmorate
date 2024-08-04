@@ -2,13 +2,18 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.db_storage.LikeDbStorage;
+import ru.yandex.practicum.filmorate.storage.dto.mapperDto.FilmDtoMapper;
+import ru.yandex.practicum.filmorate.storage.dto.modelDto.FilmDto;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,14 +22,19 @@ import java.util.stream.Collectors;
  */
 @Service
 public class FilmService {
-    private final UserStorage userStorage;
     private final FilmStorage filmStorage;
+    private final UserStorage userStorage;
+    @Autowired
+    private final LikeDbStorage likeDbStorage;
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(FilmService.class);
 
     @Autowired
-    public FilmService(UserStorage userStorage, FilmStorage filmStorage) {
+    public FilmService(@Qualifier("userDbStorage") UserStorage userStorage,
+                       @Qualifier("filmDbStorage") FilmStorage filmStorage,
+                       LikeDbStorage likeDbStorage) {
         this.userStorage = userStorage;
         this.filmStorage = filmStorage;
+        this.likeDbStorage = likeDbStorage;
     }
 
     /**
@@ -32,8 +42,13 @@ public class FilmService {
      *
      * @return Коллекция всех фильмов.
      */
-    public Collection<Film> getAllFilms() {
-        return filmStorage.findAll();
+
+    public Collection<FilmDto> getAllFilms() {
+        log.info("Все фильмы: " + filmStorage.findAll());
+        return filmStorage.findAll().stream()
+                .map(FilmDtoMapper::mapToFilmDto)
+                .sorted(Comparator.comparingLong(FilmDto::getId))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -42,8 +57,8 @@ public class FilmService {
      * @param id Идентификатор фильма.
      * @return Фильм с указанным идентификатором.
      */
-    public Film getFilmById(long id) {
-        return filmStorage.findFilmById(id);
+    public FilmDto getFilmById(long id) {
+        return FilmDtoMapper.mapToFilmDto(filmStorage.findFilmById(id));
     }
 
     /**
@@ -52,8 +67,8 @@ public class FilmService {
      * @param film Добавляемый фильм.
      * @return Добавленный фильм.
      */
-    public Film createFilm(Film film) {
-        return filmStorage.create(film);
+    public FilmDto createFilm(Film film) {
+        return FilmDtoMapper.mapToFilmDto(filmStorage.create(film));
     }
 
     /**
@@ -62,8 +77,8 @@ public class FilmService {
      * @param film Фильм с обновленной информацией.
      * @return Обновленный фильм.
      */
-    public Film updateFilm(Film film) {
-        return filmStorage.update(film);
+    public FilmDto updateFilm(Film film) {
+        return FilmDtoMapper.mapToFilmDto(filmStorage.update(film));
     }
 
     /**
@@ -80,15 +95,15 @@ public class FilmService {
      * @param userId Идентификатор пользователя, который ставит лайк.
      * @return Фильм с обновленными данными.
      */
-    public Film addLike(Long filmId, Long userId) {
+    public FilmDto addLike(Long filmId, Long userId) {
         Film film = filmStorage.findFilmById(filmId);
         User user = userStorage.findUserById(userId);
-        if (filmStorage.isLiked(filmId, userId)) {
+        likeDbStorage.addLike(filmId, userId);
+       /* if (filmStorage.isLiked(filmId, userId)) {
             throw new IllegalArgumentException("Пользователь уже поставил лайк фильму");
-        }
-        film.addLike(userId);
+        }*/
         log.info("Пользователь " + user.getName() + " поставил лайк фильму " + film.getName());
-        return film;
+        return FilmDtoMapper.mapToFilmDto(filmStorage.findFilmById(filmId));
     }
 
     /**
@@ -98,12 +113,12 @@ public class FilmService {
      * @param userId Идентификатор пользователя, чей лайк удаляется.
      * @return Фильм с обновленной информацией.
      */
-    public Film deleteLike(Long filmId, Long userId) {
+    public FilmDto deleteLike(Long filmId, Long userId) {
         Film film = filmStorage.findFilmById(filmId);
         User user = userStorage.findUserById(userId);
-        film.deleteLike(userId);
+        likeDbStorage.deleteLike(filmId, userId);
         log.info("Пользователь " + user.getName() + " удалил лайк, поставленный фильму " + film.getName());
-        return film;
+        return FilmDtoMapper.mapToFilmDto(filmStorage.findFilmById(filmId));
     }
 
     /**
@@ -113,22 +128,29 @@ public class FilmService {
      * @return Список самых популярных фильмов по количеству лайков.
      */
 
-    public List<Film> getTopFilms(Integer filmsCount) {
+
+    /*public List<FilmDto> getTopFilms(long filmsCount) {
+        log.info("Список самых популярных фильмов:");
+        return filmStorage.findAll().stream()
+                .filter(film -> film.getLikes() != null)
+                .map(FilmDtoMapper::mapToFilmDto)
+                .sorted((film1, film2) -> Integer.compare(film2.getLikes().size(), film1.getLikes().size()))
+                .limit(filmsCount)
+                .collect(Collectors.toList());
+                //.toList();
+    }*/
+    public List<FilmDto> getTopFilms(Integer filmsCount) {
         Collection<Film> films = filmStorage.findAll();
-        log.info("Список десяти самых популярных фильмов:");
+        log.info("Список самых популярных фильмов:");
         return films.stream()
+                .filter(film -> film.getLikes() != null)
+                .map(FilmDtoMapper::mapToFilmDto)
                 .sorted(this::compare)
                 .limit(filmsCount)
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Метод, сравнивающий два фильма по количеству лайков.
-     *
-     * @param film1 Первый сравниваемый фильм.
-     * @param film2 Второй сравниваемый фильм.
-     */
-    private int compare(Film film1, Film film2) {
+    private int compare(FilmDto film1, FilmDto film2) {
         return -1 * Integer.compare(film1.getLikes().size(), film2.getLikes().size());
     }
 }

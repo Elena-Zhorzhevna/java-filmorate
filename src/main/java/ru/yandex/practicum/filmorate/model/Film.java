@@ -1,10 +1,10 @@
 package ru.yandex.practicum.filmorate.model;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+
 import java.util.Set;
 
 /**
@@ -40,6 +40,15 @@ public class Film {
      * Свойство, содержащее список идентификаторов пользователей, поставивших лайк.
      */
     private Set<Long> likes = new HashSet<>();
+    /**
+     * Свойство — рейтинг Ассоциации кинокомпаний.
+     * Эта оценка определяет возрастное ограничение для фильма.
+     */
+    private RatingMpa ratingMpa;
+    /**
+     * Свойство — «жанр». У фильма может быть сразу несколько жанров.
+     */
+    private Set<Genre> genres = new HashSet<>();
 
     @JsonCreator
     public Film() {
@@ -62,6 +71,18 @@ public class Film {
         this.releaseDate = releaseDate;
         this.duration = duration;
     }
+
+    public Film(String name, String description, LocalDate releaseDate, int duration, Set<Long> likes,
+                RatingMpa ratingMpa, Set<Genre> genres) {
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+        this.likes = likes;
+        this.ratingMpa = ratingMpa;
+        this.genres = genres;
+    }
+
 
     /**
      * Метод, добавляющий лайк фильму.

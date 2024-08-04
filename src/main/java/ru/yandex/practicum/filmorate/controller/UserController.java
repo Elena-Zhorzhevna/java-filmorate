@@ -4,9 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.dto.modelDto.UserDto;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Optional;
 
 /**
  * Класс контроллера для управления пользователями в приложении Filmorate.
@@ -27,7 +28,7 @@ public class UserController {
      * @return Коллекция всех пользователей.
      */
     @GetMapping
-    public Collection<User> findAll() {
+    public Collection<UserDto> findAll() {
         return userService.getAllUsers();
     }
 
@@ -38,7 +39,7 @@ public class UserController {
      * @return Пользователь с указанным идентификатором.
      */
     @GetMapping("/{userId}")
-    public User getUserById(@PathVariable("userId") long userId) {
+    public Optional<UserDto> getUserById(@PathVariable("userId") long userId) {
         return userService.getUserById(userId);
     }
 
@@ -49,7 +50,7 @@ public class UserController {
      * @return Добавляемый пользователь.
      */
     @PostMapping
-    public User create(@RequestBody User user) {
+    public UserDto create(@RequestBody User user) {
         return userService.addUser(user);
     }
 
@@ -60,7 +61,7 @@ public class UserController {
      * @return Обновленный пользователь.
      */
     @PutMapping
-    public User update(@RequestBody User newUser) {
+    public UserDto update(@RequestBody User newUser) {
         return userService.updateUser(newUser);
     }
 
@@ -72,7 +73,7 @@ public class UserController {
      * @return Обновленные данные пользователя.
      */
     @PutMapping("/{userId}/friends/{friendId}")
-    public User addFriend(@PathVariable("userId") long userId, @PathVariable("friendId") long friendId) {
+    public UserDto addFriend(@PathVariable("userId") long userId, @PathVariable("friendId") long friendId) {
         return userService.addFriend(userId, friendId);
     }
 
@@ -84,7 +85,7 @@ public class UserController {
      * @return Обновленные данные пользователя.
      */
     @DeleteMapping("/{userId}/friends/{friendId}")
-    public User removeFriend(@PathVariable("userId") long userId, @PathVariable("friendId") long friendId) {
+    public UserDto removeFriend(@PathVariable("userId") long userId, @PathVariable("friendId") long friendId) {
         return userService.removeFriend(userId, friendId);
     }
 
@@ -95,7 +96,7 @@ public class UserController {
      * @return Список друзей пользователя.
      */
     @GetMapping("/{userId}/friends")
-    public List<User> getFriends(@PathVariable long userId) {
+    public Collection<UserDto> getFriends(@PathVariable long userId) {
         return userService.getUsersFriends(userId);
     }
 
@@ -107,7 +108,7 @@ public class UserController {
      * @return Список общих друзей двух пользователей.
      */
     @GetMapping("/{userId}/friends/common/{otherId}")
-    public List<User> getCommonFriends(@PathVariable long userId, @PathVariable long otherId) {
+    public Collection<UserDto> getCommonFriends(@PathVariable long userId, @PathVariable long otherId) {
         return userService.getCommonFriends(userId, otherId);
     }
 }

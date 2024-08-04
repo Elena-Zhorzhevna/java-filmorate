@@ -32,7 +32,7 @@ public interface UserStorage {
     /**
      * Метод, проверяющий, являются ли пользователи друзьями.
      */
-    boolean isFriend(long filmId, long userId);
+    /*boolean isFriend(long filmId, long userId);*/
 
     /**
      * Удаление всех пользователей.

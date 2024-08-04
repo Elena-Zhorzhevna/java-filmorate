@@ -42,6 +42,13 @@ public final class FilmValidator {
         if (!isValidDuration(film.getDuration())) {
             throw new ValidationException("Продолжительность фильма должна быть положительным числом.");
         }
+/*
+        if (!isValidGenre(film)) {
+            throw new ValidationException("Жанр фильма отсутствует.");
+        }
+        if (!isValidRatingMpa(film)) {
+            throw new ValidationException("Рейтинг MPA фильма отсутствует.");
+        }*/
         return true;
     }
 
@@ -83,5 +90,15 @@ public final class FilmValidator {
      */
     private static boolean isValidDuration(int duration) {
         return duration > 0;
+    }
+
+
+    private static boolean isValidRatingMpa(Film film) {
+        return !(film.getRatingMpa() == null || film.getRatingMpa().getRatingName().isBlank());
+
+    }
+
+    private static boolean isValidGenre(Film film) {
+        return !(film.getGenres() == null || film.getGenres().isEmpty());
     }
 }

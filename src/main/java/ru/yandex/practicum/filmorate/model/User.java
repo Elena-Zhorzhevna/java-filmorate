@@ -2,6 +2,9 @@ package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Data;
+import lombok.NonNull;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -10,11 +13,14 @@ import java.util.Set;
 /**
  * Представляет пользователей в приложении Filmorate.
  */
+
+@Table(name = "users")
 @Data
 public class User {
     /**
      * Идентификатор пользователя.
      */
+    @Id
     private long id;
     /**
      * Логин пользователя.
@@ -35,7 +41,7 @@ public class User {
     /**
      * Свойство, содержащее список идентификаторов друзей пользователя.
      */
-    private Set<Long> friends = new HashSet<>();
+    private Set<Friend> friends = new HashSet<>();
 
     @JsonCreator
     public User() {
@@ -64,21 +70,29 @@ public class User {
         this.birthday = birthday;
     }
 
+    public User(int id, String login, String email, String name, LocalDate birthday) {
+        this.id = id;
+        this.login = login;
+        this.email = email;
+        this.name = name;
+        this.birthday = birthday;
+    }
+
     /**
      * Метод, добавляющий идентификатор пользователя в свойство friends.
      *
-     * @param id Идентификатор пользователя, который добавляется в друзья.
+     *
      */
-    public void addFriend(Long id) {
-        friends.add(id);
+    public void addFriend(Friend friend) {
+        friends.add(friend);
     }
 
     /**
      * Метод, удаляющий индентификатор пользователя из свойства friends.
      *
-     * @param id Идентификатор пользователя, который удаляется из друзей.
+     *
      */
-    public void deleteFriend(Long id) {
-        friends.remove(id);
+    public void deleteFriend(Friend friend) {
+        friends.remove(friend.getFriendId());
     }
 }

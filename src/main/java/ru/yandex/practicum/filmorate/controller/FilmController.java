@@ -1,25 +1,23 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.dto.modelDto.FilmDto;
 
 import java.util.Collection;
-import java.util.List;
+
 
 /**
  * Класс контроллера для управления фильмами в приложении Filmorate.
  */
 @RestController
 @RequestMapping("/films")
+@RequiredArgsConstructor
 public class FilmController {
     private final FilmService filmService;
-
-    @Autowired
-    public FilmController(FilmService filmService) {
-        this.filmService = filmService;
-    }
 
     /**
      * Обрабатывает GET-запрос на получение всех фильмов.
@@ -27,7 +25,7 @@ public class FilmController {
      * @return Коллекция всех фильмов.
      */
     @GetMapping
-    public Collection<Film> findAll() {
+    public Collection<FilmDto> findAll() {
         return filmService.getAllFilms();
     }
 
@@ -38,7 +36,7 @@ public class FilmController {
      * @return Пользователь с указанным идентификатором.
      */
     @GetMapping("/{filmId}")
-    public Film getFilmById(@PathVariable("filmId") long filmId) {
+    public FilmDto getFilmById(@PathVariable("filmId") long filmId) {
         return filmService.getFilmById(filmId);
     }
 
@@ -49,7 +47,7 @@ public class FilmController {
      * @return Добавленный фильм.
      */
     @PostMapping
-    public Film create(@RequestBody Film film) {
+    public FilmDto create(@RequestBody Film film) {
         return filmService.createFilm(film);
     }
 
@@ -60,7 +58,7 @@ public class FilmController {
      * @return Обновленный фильм.
      */
     @PutMapping
-    public Film update(@RequestBody Film newFilm) {
+    public FilmDto update(@RequestBody Film newFilm) {
         return filmService.updateFilm(newFilm);
     }
 
@@ -71,8 +69,8 @@ public class FilmController {
      * @param userId Идентификатор пользователя, который ставит лайк.
      */
     @PutMapping("/{filmId}/like/{userId}")
-    public void addLike(@PathVariable("filmId") Long filmId, @PathVariable("userId") Long userId) {
-        filmService.addLike(filmId, userId);
+    public FilmDto addLike(@PathVariable("filmId") Long filmId, @PathVariable("userId") Long userId) {
+        return filmService.addLike(filmId, userId);
     }
 
     /**
@@ -82,8 +80,8 @@ public class FilmController {
      * @param userId Идентификатор пользователя, который удаляет лайк.
      */
     @DeleteMapping("/{filmId}/like/{userId}")
-    public void deleteLike(@PathVariable("filmId") Long filmId, @PathVariable("userId") Long userId) {
-        filmService.deleteLike(filmId, userId);
+    public FilmDto deleteLike(@PathVariable("filmId") Long filmId, @PathVariable("userId") Long userId) {
+        return filmService.deleteLike(filmId, userId);
     }
 
     /**
@@ -93,7 +91,7 @@ public class FilmController {
      * @return Список самых популярных фильмов, ограниченный указанным количеством.
      */
     @GetMapping("/popular")
-    public List<Film> getTopFilms(
+    public Collection<FilmDto> getTopFilms(
             @RequestParam(name = "count", defaultValue = "10", required = false) Integer filmsCount) {
         return filmService.getTopFilms(filmsCount);
     }
