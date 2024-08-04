@@ -94,7 +94,7 @@ public final class FilmValidator {
 
 
     private static boolean isValidRatingMpa(Film film) {
-        return !(film.getRatingMpa() == null || film.getRatingMpa().getRatingName().isBlank());
+        return !(film.getRatingMpa() == null || film.getRatingMpa().getName().isBlank());
 
     }
 

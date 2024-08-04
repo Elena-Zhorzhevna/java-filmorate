@@ -21,11 +21,11 @@ public class RatingMpaService {
     public Collection<RatingMpaDto> getAllRatingsMpa() {
         return mpaDbStorage.getAllRatings().stream()
                 .map(RatingMpaDtoMapper::mapToMpaDto)
-                .sorted(Comparator.comparingInt(RatingMpaDto::getRatingId))
+                .sorted(Comparator.comparingInt(RatingMpaDto::getId))
                 .collect(Collectors.toList());
     }
 
-    public RatingMpaDto getRatingMpa(int ratingId) {
-        return RatingMpaDtoMapper.mapToMpaDto(mpaDbStorage.getRatingMpa(ratingId));
+    public RatingMpaDto getRatingMpa(int id) {
+        return RatingMpaDtoMapper.mapToMpaDto(mpaDbStorage.getRatingMpa(id));
     }
 }

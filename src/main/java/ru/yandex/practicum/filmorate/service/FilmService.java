@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 public class FilmService {
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
-    @Autowired
     private final LikeDbStorage likeDbStorage;
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(FilmService.class);
 
@@ -36,13 +35,11 @@ public class FilmService {
         this.filmStorage = filmStorage;
         this.likeDbStorage = likeDbStorage;
     }
-
     /**
      * Получение всех фильмов.
      *
      * @return Коллекция всех фильмов.
      */
-
     public Collection<FilmDto> getAllFilms() {
         log.info("Все фильмы: " + filmStorage.findAll());
         return filmStorage.findAll().stream()
@@ -105,6 +102,7 @@ public class FilmService {
         log.info("Пользователь " + user.getName() + " поставил лайк фильму " + film.getName());
         return FilmDtoMapper.mapToFilmDto(filmStorage.findFilmById(filmId));
     }
+
 
     /**
      * Удаление лайка, поставленного фильму.

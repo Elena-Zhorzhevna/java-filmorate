@@ -44,7 +44,7 @@ CREATE TABLE films (
 );
 
 CREATE TABLE users (
-    user_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY NOT NULL,
     login varchar(255) NOT NULL,
     email varchar(255) NOT NULL,
     name varchar(255) NOT NULL,
@@ -52,8 +52,8 @@ CREATE TABLE users (
 );
 
 CREATE TABLE film_likes (
-    film_id BIGINT REFERENCES films (film_id) ON DELETE RESTRICT,
-    user_id BIGINT REFERENCES users (user_id) ON DELETE RESTRICT,
+    film_id BIGINT REFERENCES films (film_id),
+    user_id BIGINT REFERENCES users (user_id),
     PRIMARY KEY(film_id, user_id)
 );
 

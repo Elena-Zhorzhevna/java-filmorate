@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
@@ -33,7 +32,7 @@ public class FilmController {
      * Обрабатывает GET - запрос на получение фильма по идентификатору.
      *
      * @param filmId Идентификатор фильма.
-     * @return Пользователь с указанным идентификатором.
+     * @return Фильм с указанным идентификатором.
      */
     @GetMapping("/{filmId}")
     public FilmDto getFilmById(@PathVariable("filmId") long filmId) {

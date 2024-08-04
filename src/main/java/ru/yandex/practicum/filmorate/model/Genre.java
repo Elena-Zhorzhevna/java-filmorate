@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.Getter;
 
@@ -24,7 +23,7 @@ public class Genre {
     /**
      * Идентификатор жанра фильма.
      */
-    private int genreId;
+    private int id;
     /**
      * Название жанра.
      */

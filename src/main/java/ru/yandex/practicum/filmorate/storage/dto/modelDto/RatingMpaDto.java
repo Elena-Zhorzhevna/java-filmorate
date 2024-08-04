@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class RatingMpaDto {
-    private int ratingId;
+    private int id;
     private String name;
 }
 

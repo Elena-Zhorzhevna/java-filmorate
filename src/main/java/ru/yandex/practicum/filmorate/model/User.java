@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Data;
-import lombok.NonNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -80,8 +79,6 @@ public class User {
 
     /**
      * Метод, добавляющий идентификатор пользователя в свойство friends.
-     *
-     *
      */
     public void addFriend(Friend friend) {
         friends.add(friend);
@@ -89,8 +86,6 @@ public class User {
 
     /**
      * Метод, удаляющий индентификатор пользователя из свойства friends.
-     *
-     *
      */
     public void deleteFriend(Friend friend) {
         friends.remove(friend.getFriendId());

@@ -13,8 +13,8 @@ import java.sql.SQLException;
         @Override
         public RatingMpa mapRow(ResultSet rs, int rowNum) throws SQLException {
             RatingMpa ratingMpa = new RatingMpa();
-            ratingMpa.setRatingId(rs.getInt("rating_id"));
-            ratingMpa.setRatingName(rs.getString("name"));
+            ratingMpa.setId(rs.getInt("rating_id"));
+            ratingMpa.setName(rs.getString("name"));
             return ratingMpa;
         }
     }

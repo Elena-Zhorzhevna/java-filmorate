@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
@@ -18,11 +17,11 @@ public class RatingMpa {
     /**
      * Идентификатор рейтинга.
      */
-    private int ratingId;
+    private int id;
     /**
      * Название рейтинга.
      */
-    private String ratingName;
+    private String name;
     /**
      * Описание рейтинга.
      */
@@ -31,8 +30,8 @@ public class RatingMpa {
     public RatingMpa() {
     }
 
-    public RatingMpa(int ratingId, String ratingName) {
-        this.ratingId = ratingId;
-        this.ratingName = ratingName;
+    public RatingMpa(int id, String name) {
+        this.id = id;
+        this.name = name;
     }
 }

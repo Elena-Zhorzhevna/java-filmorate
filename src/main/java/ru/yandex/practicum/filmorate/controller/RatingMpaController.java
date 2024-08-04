@@ -10,19 +10,32 @@ import ru.yandex.practicum.filmorate.storage.dto.modelDto.RatingMpaDto;
 
 import java.util.Collection;
 
+/**
+ * Класс контроллера для управления рейтингами Ассоциации кинокомпаний
+ * (англ. Motion Picture Association, сокращённо МРА).
+ */
 @RestController
 @RequestMapping("/mpa")
 @RequiredArgsConstructor
 public class RatingMpaController {
     private final RatingMpaService mpaService;
 
+    /**
+     * Обрабатывает GET-запрос на получение всех рейтингов.
+     * @return Коллекция всех рейтингов.
+     */
     @GetMapping
     public Collection<RatingMpaDto> getRatingsMpa() {
         return mpaService.getAllRatingsMpa();
     }
 
-    @GetMapping("/{ratingId}")
-    public RatingMpaDto getRatingMpa(@PathVariable int ratingId) {
-        return mpaService.getRatingMpa(ratingId);
+    /**
+     * Обрабатывает GET - запрос на получение рейтинга по идентификатору.
+     * @param id Идентификатор рейтинга.
+     * @return Рейтинг с указанным идентификатором.
+     */
+    @GetMapping("/{id}")
+    public RatingMpaDto getRatingMpa(@PathVariable int id) {
+        return mpaService.getRatingMpa(id);
     }
 }

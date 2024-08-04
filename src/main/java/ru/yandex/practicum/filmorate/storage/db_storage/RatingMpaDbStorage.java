@@ -20,12 +20,12 @@ public class RatingMpaDbStorage extends BaseDbStorage<RatingMpa> {
         super(jdbc, mapper);
     }
 
-    public RatingMpa getRatingMpa(int ratingId) {
-        RatingMpa ratingMpa = findOne(SELECT_RATING_MPA, ratingId);
+    public RatingMpa getRatingMpa(int id) {
+        RatingMpa ratingMpa = findOne(SELECT_RATING_MPA, id);
         if (ratingMpa != null) {
             return ratingMpa;
         } else {
-            log.error("Рейтинг с ID = " + ratingId + " не найден");
+            log.error("Рейтинг с ID = " + id + " не найден");
             throw new NotFoundException("Рейтинг с данным id не найден");
         }
     }

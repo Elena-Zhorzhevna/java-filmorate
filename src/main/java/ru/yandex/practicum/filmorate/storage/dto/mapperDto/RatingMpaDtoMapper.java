@@ -6,8 +6,8 @@ import ru.yandex.practicum.filmorate.storage.dto.modelDto.RatingMpaDto;
 public class RatingMpaDtoMapper {
     public static RatingMpaDto mapToMpaDto(RatingMpa ratingMpa) {
         RatingMpaDto ratingMpaDto = new RatingMpaDto();
-        ratingMpaDto.setRatingId(ratingMpa.getRatingId());
-        ratingMpaDto.setName(ratingMpa.getRatingName());
+        ratingMpaDto.setId(ratingMpa.getId());
+        ratingMpaDto.setName(ratingMpa.getName());
         return ratingMpaDto;
     }
 }
