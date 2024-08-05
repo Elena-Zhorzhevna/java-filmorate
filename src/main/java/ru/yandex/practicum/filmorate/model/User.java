@@ -83,11 +83,4 @@ public class User {
     public void addFriend(Friend friend) {
         friends.add(friend);
     }
-
-    /**
-     * Метод, удаляющий индентификатор пользователя из свойства friends.
-     */
-    public void deleteFriend(Friend friend) {
-        friends.remove(friend.getId());
-    }
 }

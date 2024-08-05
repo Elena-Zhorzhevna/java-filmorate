@@ -15,13 +15,16 @@ public class LikeDbStorage extends BaseDbStorage<Long> {
 
     //public LikeDbStorage(JdbcTemplate jdbc, RowMapper<Long> mapper) {
     //    super(jdbc, mapper);
-   // }
+    // }
 
-       public LikeDbStorage(JdbcTemplate jdbc) {
-           super(jdbc, (rs, rowNum) -> rs.getLong("user_id"));
-       }
-
+    public LikeDbStorage(JdbcTemplate jdbc) {
+        super(jdbc, (rs, rowNum) -> rs.getLong("user_id"));
+    }
+    /**
+     * Добавляет лайк к фильму если его ещё нет, если есть, но ничего оне делаем
+     */
     public void addLike(Long filmId, Long userId) {
+        if (this.getLikes(filmId).contains(userId)) return;
         update(INSERT_LIKE, filmId, userId);
     }
 

@@ -22,28 +22,22 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFound(final NotFoundException e) {
-        log.error("NotFoundException");
+        log.error("NotFoundException", e);
         return new ErrorResponse("Искомый объект не найден.", e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidate(final ValidationException e) {
-        log.error("ValidationException");
+        log.error("ValidationException", e);
         return new ErrorResponse("Ошибка валидации.", e.getMessage());
     }
 
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleException(final Throwable e) {
-        log.error("Возникло исключение");
+        log.error("Возникло исключение", e);
         return new ErrorResponse("Возникло исключение.", e.getMessage());
     }
-
-
-/*@ExceptionHandler(ConstraintViolationException.class)
-@ResponseStatus(HttpStatus.BAD_REQUEST)
-public Map<String, String> DataIsNotValid(final ConstraintViolationException e) {
-    return Map.of("error", "invalid user data");
-}*/
 }
+

@@ -5,7 +5,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Friend;
-import ru.yandex.practicum.filmorate.validator.UserValidator;
+
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public class FriendDbStorage extends BaseDbStorage<Friend> {
     private static final String INSERT_FRIEND = "INSERT INTO friends(user_id, " +
             "friend_id, status_id) VALUES(?, ?, ?)";
     private static final String DELETE_FRIEND = "DELETE FROM friends WHERE user_id = ? AND friend_id = ?";
-    private static final String SELECT_FRIENDS = "SELECT friend_id, status_id FROM friends WHERE user_id = ?";
+    private static final String SELECT_FRIENDS = "SELECT * FROM friends WHERE user_id = ?";
 
     public FriendDbStorage(JdbcTemplate jdbc, RowMapper<Friend> mapper) {
         super(jdbc, mapper);

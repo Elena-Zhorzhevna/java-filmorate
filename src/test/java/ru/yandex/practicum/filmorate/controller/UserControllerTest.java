@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.dto.modelDto.UserDto;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -80,7 +81,7 @@ public class UserControllerTest {
         User newUser = new User(existingUser.getId(), "NewLogin", "NewUser@email.ru", birthday);
         users.put(newUser.getId(), newUser);
         try {
-            User updatedUser = userService.updateUser(newUser);
+            UserDto updatedUser = userService.updateUser(newUser);
             assertEquals(updatedUser.getLogin(), "NewLogin");
             assertEquals(updatedUser.getEmail(), "NewUser@email.ru");
             assertEquals(updatedUser.getBirthday(), birthday);

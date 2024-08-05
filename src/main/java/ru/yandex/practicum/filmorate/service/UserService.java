@@ -3,7 +3,9 @@ package ru.yandex.practicum.filmorate.service;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.WebApplicationContext;
 import ru.yandex.practicum.filmorate.model.Friend;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
@@ -19,16 +21,17 @@ import java.util.stream.Collectors;
  */
 @Service
 public class UserService {
-
     private final UserStorage userStorage;
-    @Autowired
     private final FriendDbStorage friendDbStorage;
+    private final ApplicationContext applicationContext; // для self injection
+
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(UserService.class);
 
     @Autowired
-    public UserService(@Qualifier("userDbStorage") UserStorage userStorage, FriendDbStorage friendDbStorage) {
+    public UserService(@Qualifier("userDbStorage") UserStorage userStorage, FriendDbStorage friendDbStorage, WebApplicationContext applicationContext) {
         this.userStorage = userStorage;
         this.friendDbStorage = friendDbStorage;
+        this.applicationContext = applicationContext;
     }
 
     /**
@@ -50,7 +53,9 @@ public class UserService {
      * @return Пользователь с заданным идентификатором.
      */
     public Optional<UserDto> getUserById(long userId) {
-        return Optional.of(UserDtoMapper.mapToUserDto(userStorage.findUserById(userId)));
+        User user = userStorage.findUserById(userId);
+        user.setFriends(new HashSet<>(friendDbStorage.getFriends(userId)));
+        return Optional.of(UserDtoMapper.mapToUserDto(user));
     }
 
     /**
@@ -88,12 +93,9 @@ public class UserService {
      * @return Обновленные данные пользователя.
      */
     public UserDto addFriend(Long userId, Long friendId) {
-        UserDto user = UserDtoMapper.mapToUserDto(userStorage.findUserById(userId));
-        UserDto friend = UserDtoMapper.mapToUserDto(userStorage.findUserById(friendId));
-
         friendDbStorage.addFriend(userId, friendId);
         log.info("Пользователь с ID = {} добавил в друзья пользователя с ID = {}", userId, friendId);
-        return UserDtoMapper.mapToUserDto(userStorage.findUserById(userId));
+        return self().getUserById(userId).orElseThrow();
     }
 
     /**
@@ -116,11 +118,25 @@ public class UserService {
      * Получение списка общих друзей пользователей.
      *
      * @param userId   Идентификатор первого пользователя.
-     * @param friendId Идентификатор второго пользователя.
+     * @param otherId Идентификатор второго пользователя.
      * @return Список общих друзей двух пользователей.
      */
-/*
-    public Collection<UserDto> getCommonFriends(Long userId, Long friendId) {
+    public Collection<UserDto> getCommonFriends(long userId, long otherId) {
+        List<Friend> userFriends = friendDbStorage.getFriends(userId);
+        Set<Long> otherFriendIds = friendDbStorage.getFriends(otherId).stream().map(Friend::getId).collect(Collectors.toSet());
+
+        Set<Long> commonFriendIds = userFriends.stream()
+                .map(Friend::getId)
+                .filter(otherFriendIds::contains)
+                .collect(Collectors.toSet());
+
+        return userStorage.findAll(commonFriendIds).stream()
+                .map(UserDtoMapper::mapToUserDto)
+                .sorted(Comparator.comparing(UserDto::getId))
+                .collect(Collectors.toList());
+    }
+    /*
+    public Collection<UserDto> getCommonFriends(Long userId, Long otherId) {
            Set<Friend> userFriends = userStorage.findUserById(userId).getFriends();
        log.info("Список общих друзей пользователей {} и {}", userStorage.findUserById(userId).getName(),
                 userStorage.findUserById(friendId).getName());
@@ -131,24 +147,6 @@ public class UserService {
                 .map(UserDtoMapper::mapToUserDto)
                 .collect(Collectors.toList());
     }*/
-
-    public Collection<UserDto> getCommonFriends(long userId, long friendId) {
-        User user = userStorage.findUserById(userId);
-        User friend = userStorage.findUserById(friendId);
-        Set<Friend> userFriends = userStorage.findUserById(userId).getFriends();
-        return userFriends.stream()
-                .filter(userStorage.findUserById(friendId).getFriends()::contains)
-                .map(Friend::getId)
-                .map(userStorage::findUserById)
-                .map(UserDtoMapper::mapToUserDto)
-                .collect(Collectors.toList());
-    }
-
-
-
-
-
-
 
     /**
      * Получение друзей пользователя, чей идентификатор указан.
@@ -163,5 +161,9 @@ public class UserService {
                 .map(userStorage::findUserById)
                 .map(UserDtoMapper::mapToUserDto)
                 .collect(Collectors.toList());
+    }
+
+    private UserService self() {
+        return applicationContext.getBean(UserService.class);
     }
 }

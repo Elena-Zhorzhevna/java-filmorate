@@ -7,10 +7,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.validator.UserValidator;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Имплементирует интерфейс UserStorage, содержит логику хранения, обновления и поиска объектов User.
@@ -28,6 +25,16 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public Collection<User> findAll() {
         return users.values();
+    }
+
+    @Override public Collection<User> findAll(Collection<Long> ids) {
+        List<User> rsl = new ArrayList<>(ids.size());
+        for (Long id : ids) {
+            var user = users.get(id);
+            if (user == null) {continue;}
+            rsl.add(user);
+        }
+        return rsl;
     }
 
     /**

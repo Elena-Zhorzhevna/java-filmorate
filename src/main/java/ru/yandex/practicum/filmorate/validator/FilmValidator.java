@@ -8,6 +8,7 @@ import java.time.LocalDate;
 
 /**
  * Класс для валидации объекта Film.
+ * Проверка перед сохранением в базу
  */
 public final class FilmValidator {
     /**
@@ -26,29 +27,14 @@ public final class FilmValidator {
      * @return Является ли объект удовлетворяющим требованиям.
      */
     public static boolean isValidFilm(@RequestBody Film film) {
-
-        if (!isValidName(film.getName())) {
+        if (!isValidName(film.getName()))
             throw new ValidationException("Название фильма не может быть пустым.");
-        }
-
-        if (!isValidDescription(film.getDescription())) {
+        if (!isValidDescription(film.getDescription()))
             throw new ValidationException("Максимальная длина описания - 200 символов.");
-        }
-
-        if (!isValidReleaseDate(film.getReleaseDate())) {
+        if (!isValidReleaseDate(film.getReleaseDate()))
             throw new ValidationException("Дата релиза не может быть раньше создания кино.");
-        }
-
-        if (!isValidDuration(film.getDuration())) {
+        if (!isValidDuration(film.getDuration()))
             throw new ValidationException("Продолжительность фильма должна быть положительным числом.");
-        }
-/*
-        if (!isValidGenre(film)) {
-            throw new ValidationException("Жанр фильма отсутствует.");
-        }
-        if (!isValidRatingMpa(film)) {
-            throw new ValidationException("Рейтинг MPA фильма отсутствует.");
-        }*/
         return true;
     }
 
@@ -92,13 +78,4 @@ public final class FilmValidator {
         return duration > 0;
     }
 
-
-    private static boolean isValidRatingMpa(Film film) {
-        return !(film.getMpa() == null || film.getMpa().getName().isBlank());
-
-    }
-
-    private static boolean isValidGenre(Film film) {
-        return !(film.getGenres() == null || film.getGenres().isEmpty());
-    }
 }

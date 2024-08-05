@@ -14,6 +14,9 @@ import java.util.Collection;
 @Log4j2
 @Repository
 public class RatingMpaDbStorage extends BaseDbStorage<RatingMpa> {
+    private static final String TABLE_NAME = "rating_mpa";
+    private static final String ID_COLUMN_NAME = "rating_id";
+
     private static final String SELECT_RATING_MPA = "SELECT * FROM rating_mpa WHERE rating_id = ?";
     private static final String SELECT_ALL_RATINGS = "SELECT * FROM rating_mpa";
 
@@ -34,4 +37,5 @@ public class RatingMpaDbStorage extends BaseDbStorage<RatingMpa> {
     public Collection<RatingMpa> getAllRatings() {
         return findMany(SELECT_ALL_RATINGS);
     }
+
 }

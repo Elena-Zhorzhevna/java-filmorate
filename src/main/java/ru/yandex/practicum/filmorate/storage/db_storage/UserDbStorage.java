@@ -13,6 +13,7 @@ import ru.yandex.practicum.filmorate.storage.mappers.UserRowMapper;
 import ru.yandex.practicum.filmorate.validator.UserValidator;
 
 
+import java.util.Collection;
 import java.util.List;
 
 @Log4j2
@@ -20,6 +21,7 @@ import java.util.List;
 public class UserDbStorage extends BaseDbStorage<User> implements UserStorage {
     private final UserRowMapper userRowMapper;
     private static final String FIND_ALL_QUERY = "SELECT * FROM users";
+    private static final String FIND_ALL_WHERE_ID_IN_QUERY = "SELECT * FROM users WHERE user_id IN (?)";
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM users WHERE user_id = ?";
     private static final String INSERT_QUERY = "INSERT INTO users(login, email, name, birthday)" +
             "VALUES (?, ?, ?, ?)";
@@ -38,6 +40,11 @@ public class UserDbStorage extends BaseDbStorage<User> implements UserStorage {
     @Override
     public List<User> findAll() {
         return findMany(FIND_ALL_QUERY);
+    }
+
+    @Override
+    public Collection<User> findAll(Collection<Long> ids) {
+        return findMany(FIND_ALL_WHERE_ID_IN_QUERY, super.collectionToSqlSyntax(ids));
     }
 
     @Override

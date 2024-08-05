@@ -5,10 +5,19 @@ import lombok.Data;
  */
 @Data
 public class Friend {
+
     /**
-     * Идентификатор друга.
+     * Идентификатор Пользователя.
+     * Источник отношений
+     * sql column: user_id
      */
     private long id;
+
+    /**
+     * Идентификатор друга.
+     * Цель отношений
+     */
+    private long friendId;
     /**
      * Идентификатор статуса дружбы.
      * Не подтверждена = 1.

@@ -30,7 +30,7 @@ public class Genre {
      */
     private String name;
 
-   @JsonCreator
+    @JsonCreator
     public Genre() {
     }
 
@@ -38,5 +38,4 @@ public class Genre {
         this.id = id;
         this.name = name;
     }
-
 }
