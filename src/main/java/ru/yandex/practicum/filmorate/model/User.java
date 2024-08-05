@@ -88,6 +88,6 @@ public class User {
      * Метод, удаляющий индентификатор пользователя из свойства friends.
      */
     public void deleteFriend(Friend friend) {
-        friends.remove(friend.getFriendId());
+        friends.remove(friend.getId());
     }
 }

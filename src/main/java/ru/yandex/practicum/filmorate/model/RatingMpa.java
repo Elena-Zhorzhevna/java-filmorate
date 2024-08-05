@@ -13,7 +13,7 @@ import lombok.Data;
  * NC-17 — лицам до 18 лет просмотр запрещён.
  */
 @Data
-public class Mpa {
+public class RatingMpa {
     /**
      * Идентификатор рейтинга.
      */
@@ -27,10 +27,10 @@ public class Mpa {
      */
     private String description;
     @JsonCreator
-    public Mpa() {
+    public RatingMpa() {
     }
 
-    public Mpa(int id, String name) {
+    public RatingMpa(int id, String name) {
         this.id = id;
         this.name = name;
     }

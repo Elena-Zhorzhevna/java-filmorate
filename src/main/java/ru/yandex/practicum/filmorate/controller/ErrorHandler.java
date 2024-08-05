@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 
+import java.util.Map;
+
 /**
  * Обработчик ошибок.
  */
@@ -37,4 +39,11 @@ public class ErrorHandler {
         log.error("Возникло исключение");
         return new ErrorResponse("Возникло исключение.", e.getMessage());
     }
+
+
+/*@ExceptionHandler(ConstraintViolationException.class)
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+public Map<String, String> DataIsNotValid(final ConstraintViolationException e) {
+    return Map.of("error", "invalid user data");
+}*/
 }

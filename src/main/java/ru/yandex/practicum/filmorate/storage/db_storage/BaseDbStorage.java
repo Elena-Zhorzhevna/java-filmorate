@@ -16,14 +16,10 @@ import java.util.List;
 public class BaseDbStorage<T> {
     protected final JdbcTemplate jdbc;
     protected final RowMapper<T> mapper;
-    //private final Class<T> entityType;
 
     protected T findOne(String query, Object... params) {
         List<T> resultList = jdbc.query(query, mapper, params);
         return resultList.isEmpty() ? null : resultList.getFirst();
-/*
-        T result = jdbc.queryForObject(query, mapper, params);
-        return result;*/
     }
 
     protected List<T> findMany(String query, Object... params) {

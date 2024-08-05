@@ -91,9 +91,7 @@ public final class FilmValidator {
     private static boolean isValidDuration(int duration) {
         return duration > 0;
     }
-}
 
-/*
 
     private static boolean isValidRatingMpa(Film film) {
         return !(film.getMpa() == null || film.getMpa().getName().isBlank());
@@ -103,4 +101,4 @@ public final class FilmValidator {
     private static boolean isValidGenre(Film film) {
         return !(film.getGenres() == null || film.getGenres().isEmpty());
     }
-}*/
+}

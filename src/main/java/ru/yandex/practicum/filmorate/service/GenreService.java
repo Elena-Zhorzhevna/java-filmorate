@@ -2,6 +2,8 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.model.RatingMpa;
 import ru.yandex.practicum.filmorate.storage.db_storage.GenreDbStorage;
 import ru.yandex.practicum.filmorate.storage.dto.mapperDto.GenreDtoMapper;
 import ru.yandex.practicum.filmorate.storage.dto.modelDto.GenreDto;

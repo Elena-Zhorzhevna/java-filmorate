@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.storage.dto.modelDto;
 
 import lombok.Data;
 import ru.yandex.practicum.filmorate.model.Friend;
-import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.time.LocalDate;
 import java.util.HashSet;

@@ -8,7 +8,7 @@ public class Friend {
     /**
      * Идентификатор друга.
      */
-    private long friendId;
+    private long id;
     /**
      * Идентификатор статуса дружбы.
      * Не подтверждена = 1.

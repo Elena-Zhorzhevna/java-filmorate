@@ -88,8 +88,9 @@ public class UserService {
      * @return Обновленные данные пользователя.
      */
     public UserDto addFriend(Long userId, Long friendId) {
-        User user = userStorage.findUserById(userId);
-        User friend = userStorage.findUserById(friendId);
+        UserDto user = UserDtoMapper.mapToUserDto(userStorage.findUserById(userId));
+        UserDto friend = UserDtoMapper.mapToUserDto(userStorage.findUserById(friendId));
+
         friendDbStorage.addFriend(userId, friendId);
         log.info("Пользователь с ID = {} добавил в друзья пользователя с ID = {}", userId, friendId);
         return UserDtoMapper.mapToUserDto(userStorage.findUserById(userId));
@@ -118,7 +119,7 @@ public class UserService {
      * @param friendId Идентификатор второго пользователя.
      * @return Список общих друзей двух пользователей.
      */
-
+/*
     public Collection<UserDto> getCommonFriends(Long userId, Long friendId) {
            Set<Friend> userFriends = userStorage.findUserById(userId).getFriends();
        log.info("Список общих друзей пользователей {} и {}", userStorage.findUserById(userId).getName(),
@@ -129,7 +130,25 @@ public class UserService {
                 .map(userStorage::findUserById)
                 .map(UserDtoMapper::mapToUserDto)
                 .collect(Collectors.toList());
+    }*/
+
+    public Collection<UserDto> getCommonFriends(long userId, long friendId) {
+        User user = userStorage.findUserById(userId);
+        User friend = userStorage.findUserById(friendId);
+        Set<Friend> userFriends = userStorage.findUserById(userId).getFriends();
+        return userFriends.stream()
+                .filter(userStorage.findUserById(friendId).getFriends()::contains)
+                .map(Friend::getId)
+                .map(userStorage::findUserById)
+                .map(UserDtoMapper::mapToUserDto)
+                .collect(Collectors.toList());
     }
+
+
+
+
+
+
 
     /**
      * Получение друзей пользователя, чей идентификатор указан.
@@ -140,7 +159,7 @@ public class UserService {
     public Collection<UserDto> getUsersFriends(Long userId) {
         log.info("Список друзей пользователя " + userStorage.findUserById(userId).getName());
         return friendDbStorage.getFriends(userId).stream()
-                .map(Friend::getFriendId)
+                .map(Friend::getId)
                 .map(userStorage::findUserById)
                 .map(UserDtoMapper::mapToUserDto)
                 .collect(Collectors.toList());

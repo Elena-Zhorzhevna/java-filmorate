@@ -1,8 +1,8 @@
 package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import lombok.Data;
-import lombok.Getter;
+import jdk.jshell.Snippet;
+import lombok.*;
 
 /**
  * Жанр фильма. Один фильм может иметь несколько жанров. Например:
@@ -14,7 +14,8 @@ import lombok.Getter;
  * Боевик.
  */
 @Data
-@Getter
+@Builder
+@AllArgsConstructor
 public class Genre {
     /**
      * Идентификатор фильма.
@@ -29,7 +30,13 @@ public class Genre {
      */
     private String name;
 
-    @JsonCreator
+   @JsonCreator
     public Genre() {
     }
+
+    public Genre(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
 }

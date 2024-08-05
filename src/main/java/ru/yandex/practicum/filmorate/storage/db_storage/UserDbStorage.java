@@ -5,11 +5,10 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Friend;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
-
 import ru.yandex.practicum.filmorate.storage.mappers.UserRowMapper;
 import ru.yandex.practicum.filmorate.validator.UserValidator;
 
@@ -43,7 +42,13 @@ public class UserDbStorage extends BaseDbStorage<User> implements UserStorage {
 
     @Override
     public User findUserById(Long userId) {
-        return findOne(FIND_BY_ID_QUERY, userId);
+        User user = findOne(FIND_BY_ID_QUERY, userId);
+        if (user != null) {
+            return user;
+        } else {
+            log.error("Пользователь с id = " + userId + " не найден");
+            throw new NotFoundException("Пользователь с данным id не найден");
+        }
     }
 
     @Override
@@ -57,7 +62,7 @@ public class UserDbStorage extends BaseDbStorage<User> implements UserStorage {
                 user.getName(),
                 user.getBirthday());
         for (Friend friend : user.getFriends()) {
-            update(INSERT_FRIENDS_QUERY, id, friend.getFriendId());
+            update(INSERT_FRIENDS_QUERY, id, friend.getId());
         }
         user.setId(id);
         log.info("Создан пользователь: {}", user);
@@ -68,6 +73,8 @@ public class UserDbStorage extends BaseDbStorage<User> implements UserStorage {
     public User update(User newUser) {
         log.info("Получен запрос на обновление пользователя: {}", newUser);
         UserValidator.isValidUser(newUser);
+        User user = findOne(FIND_BY_ID_QUERY, newUser.getId());
+        if (user != null) {
             update(
                     UPDATE_QUERY,
                     newUser.getLogin(),
@@ -75,13 +82,13 @@ public class UserDbStorage extends BaseDbStorage<User> implements UserStorage {
                     newUser.getName(),
                     newUser.getBirthday(),
                     newUser.getId()
-                    //newUser.getFriends()
             );
+            return newUser;
 
-            log.info("Пользователь с id = " + newUser.getId() + " не найден");
-
-        log.info("Пользователь после обновления: {}", newUser);
-        return newUser;
+        } else {
+            log.error("Пользователь с id = " + newUser.getId() + " не найден");
+            throw new NotFoundException("Пользователь с данным id не найден");
+        }
     }
 
 
