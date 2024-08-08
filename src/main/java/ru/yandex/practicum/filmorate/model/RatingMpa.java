@@ -26,6 +26,7 @@ public class RatingMpa {
      * Описание рейтинга.
      */
     private String description;
+
     @JsonCreator
     public RatingMpa() {
     }

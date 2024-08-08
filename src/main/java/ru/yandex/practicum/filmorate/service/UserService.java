@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 /**
  * Сервисный класс, который обрабатывает операции и взаимодействия, связанные с пользователями.
+ * Во всех случаях возвращает объекты UserDto.
  */
 @Service
 public class UserService {
@@ -28,7 +29,8 @@ public class UserService {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(UserService.class);
 
     @Autowired
-    public UserService(@Qualifier("userDbStorage") UserStorage userStorage, FriendDbStorage friendDbStorage, WebApplicationContext applicationContext) {
+    public UserService(@Qualifier("userDbStorage") UserStorage userStorage, FriendDbStorage friendDbStorage,
+                       WebApplicationContext applicationContext) {
         this.userStorage = userStorage;
         this.friendDbStorage = friendDbStorage;
         this.applicationContext = applicationContext;
@@ -117,13 +119,14 @@ public class UserService {
     /**
      * Получение списка общих друзей пользователей.
      *
-     * @param userId   Идентификатор первого пользователя.
+     * @param userId  Идентификатор первого пользователя.
      * @param otherId Идентификатор второго пользователя.
      * @return Список общих друзей двух пользователей.
      */
     public Collection<UserDto> getCommonFriends(long userId, long otherId) {
         List<Friend> userFriends = friendDbStorage.getFriends(userId);
-        Set<Long> otherFriendIds = friendDbStorage.getFriends(otherId).stream().map(Friend::getId).collect(Collectors.toSet());
+        Set<Long> otherFriendIds = friendDbStorage.getFriends(otherId).stream().map(Friend::getId)
+                .collect(Collectors.toSet());
 
         Set<Long> commonFriendIds = userFriends.stream()
                 .map(Friend::getId)
@@ -135,18 +138,6 @@ public class UserService {
                 .sorted(Comparator.comparing(UserDto::getId))
                 .collect(Collectors.toList());
     }
-    /*
-    public Collection<UserDto> getCommonFriends(Long userId, Long otherId) {
-           Set<Friend> userFriends = userStorage.findUserById(userId).getFriends();
-       log.info("Список общих друзей пользователей {} и {}", userStorage.findUserById(userId).getName(),
-                userStorage.findUserById(friendId).getName());
-        return userFriends.stream()
-                .filter(userStorage.findUserById(friendId).getFriends()::contains)
-                .map(Friend::getFriendId)
-                .map(userStorage::findUserById)
-                .map(UserDtoMapper::mapToUserDto)
-                .collect(Collectors.toList());
-    }*/
 
     /**
      * Получение друзей пользователя, чей идентификатор указан.
@@ -163,6 +154,9 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Метод класса для внедрения себя как зависимости
+     */
     private UserService self() {
         return applicationContext.getBean(UserService.class);
     }

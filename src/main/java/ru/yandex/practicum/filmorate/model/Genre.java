@@ -1,8 +1,9 @@
 package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import jdk.jshell.Snippet;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 
 /**
  * Жанр фильма. Один фильм может иметь несколько жанров. Например:

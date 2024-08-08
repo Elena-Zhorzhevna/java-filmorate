@@ -6,9 +6,11 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Friend;
 
-
 import java.util.List;
 
+/**
+ * Является DAO — объектом доступа к данным друга.
+ */
 @Repository
 public class FriendDbStorage extends BaseDbStorage<Friend> {
     private static final String INSERT_FRIEND = "INSERT INTO friends(user_id, " +
@@ -20,6 +22,12 @@ public class FriendDbStorage extends BaseDbStorage<Friend> {
         super(jdbc, mapper);
     }
 
+    /**
+     * Добавление друга.
+     *
+     * @param userId   Идентификатор пользователя.
+     * @param friendId Идентификатор друга.
+     */
     public void addFriend(Long userId, Long friendId) {
         if (userId == null || friendId == null) {
             throw new NotFoundException("Пользователь с таким айди не найден.");
@@ -28,10 +36,22 @@ public class FriendDbStorage extends BaseDbStorage<Friend> {
         }
     }
 
+    /**
+     * Удаление друга.
+     *
+     * @param userId   Идентификатор пользователя.
+     * @param friendId Идентификатор друга.
+     */
     public void deleteFriend(Long userId, Long friendId) {
         delete(DELETE_FRIEND, userId, friendId);
     }
 
+    /**
+     * Получение всех друзей пользователя.
+     *
+     * @param userId Идентификатор пользователя.
+     * @return Список друзей.
+     */
     public List<Friend> getFriends(Long userId) {
         return findMany(SELECT_FRIENDS, userId);
     }

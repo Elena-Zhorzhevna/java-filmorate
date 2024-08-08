@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.storage;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Интерфейс, в котором определены методы добавления, удаления и модификации объектов User.
@@ -35,11 +34,6 @@ public interface UserStorage {
      * Получение пользователя по айди.
      */
     User findUserById(Long userId);
-
-    /**
-     * Метод, проверяющий, являются ли пользователи друзьями.
-     */
-    /*boolean isFriend(long filmId, long userId);*/
 
     /**
      * Удаление всех пользователей.

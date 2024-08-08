@@ -7,6 +7,9 @@ import ru.yandex.practicum.filmorate.model.RatingMpa;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Класс обрабатывает отдельно каждую запись, полученную из БД, и возвращает уже готовый объект — RatingMpa.
+ */
 @Component
 public class RatingMpaRowMapper implements RowMapper<RatingMpa> {
 

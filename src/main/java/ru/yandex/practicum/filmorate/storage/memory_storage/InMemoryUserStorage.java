@@ -27,11 +27,14 @@ public class InMemoryUserStorage implements UserStorage {
         return users.values();
     }
 
-    @Override public Collection<User> findAll(Collection<Long> ids) {
+    @Override
+    public Collection<User> findAll(Collection<Long> ids) {
         List<User> rsl = new ArrayList<>(ids.size());
         for (Long id : ids) {
             var user = users.get(id);
-            if (user == null) {continue;}
+            if (user == null) {
+                continue;
+            }
             rsl.add(user);
         }
         return rsl;

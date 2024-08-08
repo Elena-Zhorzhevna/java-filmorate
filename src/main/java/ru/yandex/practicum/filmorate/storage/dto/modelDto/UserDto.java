@@ -7,6 +7,9 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Класс представляет объект, который будет возвращать сервис при запросе данных о пользователе.
+ */
 @Data
 public class UserDto {
     private long id;

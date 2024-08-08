@@ -7,7 +7,9 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.validator.FilmValidator;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Имплементирует интерфейс FilmStorage, содержит логику хранения, обновления и поиска объектов Film.

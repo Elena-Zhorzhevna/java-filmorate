@@ -7,6 +7,9 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Класс обрабатывает отдельно каждую запись, полученную из БД, и возвращает уже готовый объект — Genre.
+ */
 @Component
 public class GenreRowMapper implements RowMapper<Genre> {
 

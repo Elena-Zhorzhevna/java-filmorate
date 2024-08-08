@@ -8,6 +8,9 @@ import ru.yandex.practicum.filmorate.model.RatingMpa;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Класс обрабатывает отдельно каждую запись, полученную из БД, и возвращает уже готовый объект — Film.
+ */
 @Component
 public class FilmRowMapper implements RowMapper<Film> {
     @Override
@@ -20,7 +23,6 @@ public class FilmRowMapper implements RowMapper<Film> {
         film.setReleaseDate(resultSet.getDate("release_date").toLocalDate());
         RatingMpa ratingMpa = new RatingMpa();
         ratingMpa.setId(resultSet.getInt("rating_id"));
-        //ratingMpa.setRatingName(resultSet.getString("name"));
         film.setMpa(ratingMpa);
         return film;
     }

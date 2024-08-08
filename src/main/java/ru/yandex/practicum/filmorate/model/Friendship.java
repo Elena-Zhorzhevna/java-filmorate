@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+
 /**
  * Статус дружбы между двумя пользователями.
  * Неподтверждённая — когда один пользователь отправил запрос на добавление другого пользователя в друзья,
@@ -15,6 +16,7 @@ public class Friendship {
      * Наименование статуса.
      */
     private final String statusName;
+
     @JsonCreator
     Friendship(int statusId, String statusName) {
         this.statusId = statusId;

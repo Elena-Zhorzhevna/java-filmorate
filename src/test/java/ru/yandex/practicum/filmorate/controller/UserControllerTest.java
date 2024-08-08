@@ -1,9 +1,12 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -13,21 +16,34 @@ import ru.yandex.practicum.filmorate.storage.dto.modelDto.UserDto;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest
+@AutoConfigureTestDatabase
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class UserControllerTest {
-    @Autowired
-    UserService userService;
-    Map<Long, User> users = new HashMap<>();
+    private final UserService userService;
+    User controllerTestUser = new User();
+    User controllerTestUser2 = new User();
+
+    @BeforeEach
+    public void beforeEach() {
+        controllerTestUser.setLogin("ControllerTestLogin");
+        controllerTestUser.setName("ControllerTestName");
+        controllerTestUser.setBirthday(LocalDate.parse("2020-12-12"));
+        controllerTestUser.setEmail("controllerTest@email");
+
+        controllerTestUser2.setLogin("ControllerTestLogin2");
+        controllerTestUser2.setName("ControllerTestName2");
+        controllerTestUser2.setBirthday(LocalDate.parse("1990-09-09"));
+        controllerTestUser2.setEmail("controllerTest2@email");
+    }
 
     @AfterEach
     void afterEach() {
-        users.clear();
         userService.removeAllUsers();
     }
 
@@ -36,18 +52,11 @@ public class UserControllerTest {
      */
     @Test
     void findAllUsersTest() {
-        User user1 = new User(1, "Jack", "flower@m.ru",
-                LocalDate.of(2000, Month.NOVEMBER, 25));
-        users.put(user1.getId(), user1);
-        userService.addUser(user1);
-        User user2 = new User(2, "Helen", "millenium@m.ru",
-                LocalDate.of(1998, Month.APRIL, 20));
-        users.put(user2.getId(), user2);
-        userService.addUser(user2);
-        String expected = "[" + user1.toString() + ", " + user2.toString() + "]";
-        // Проверка, что метод findAll() возвращает всех пользователей из коллекции
-        String result = userService.getAllUsers().toString();
-        assertEquals(expected, result);
+        userService.addUser(controllerTestUser);
+        userService.addUser(controllerTestUser2);
+        assertThat(userService.getAllUsers().size()).isEqualTo(2);
+        assertThat(userService.getAllUsers().stream().map(UserDto::getLogin).toList())
+                .isEqualTo(List.of("ControllerTestLogin", "ControllerTestLogin2"));
     }
 
     /**
@@ -55,16 +64,14 @@ public class UserControllerTest {
      */
     @Test
     void userCreationTest() {
-        String email = "test@example.ru";
-        String login = "testLogin";
-        LocalDate birthday = LocalDate.of(2000, Month.MAY, 1);
-        User user = new User(email, login, birthday);
-        try {
-            users.put(user.getId(), user);
-            assertEquals(user.getId(), users.get(user.getId()).getId());
-        } catch (ValidationException e) {
-            fail("ValidationException was thrown");
-        }
+        User testCreationUser = new User("TestCreationUserLogin", "test@email", "TestUserName",
+                LocalDate.parse("2020-10-10"));
+        userService.addUser(testCreationUser);
+        assertThat(userService.getAllUsers().size()).isEqualTo(1);
+        assertThat(userService.getUserById(testCreationUser.getId()).get().getLogin())
+                .isEqualTo("TestCreationUserLogin");
+        assertThat(userService.getUserById(testCreationUser.getId()).get().getEmail())
+                .isEqualTo("test@email");
     }
 
     /**
@@ -72,19 +79,14 @@ public class UserControllerTest {
      */
     @Test
     void updateExistingUserTest() {
-        String login = "TestUserToUpdate";
-        String email = "TestUser@email.ru";
-        String name = "TestUserName";
-        LocalDate birthday = LocalDate.of(1999, Month.APRIL, 1);
-        User existingUser = new User(login, email, name, birthday);
-        userService.addUser(existingUser);
-        User newUser = new User(existingUser.getId(), "NewLogin", "NewUser@email.ru", birthday);
-        users.put(newUser.getId(), newUser);
+        UserDto existingUser = userService.addUser(controllerTestUser2);
+        User newUser = new User(existingUser.getId(), "TestUserToUpdateLogin",
+                "TestUser@email.ru", LocalDate.parse("1999-09-09"));
         try {
             UserDto updatedUser = userService.updateUser(newUser);
-            assertEquals(updatedUser.getLogin(), "NewLogin");
-            assertEquals(updatedUser.getEmail(), "NewUser@email.ru");
-            assertEquals(updatedUser.getBirthday(), birthday);
+            assertThat(updatedUser.getLogin()).isEqualTo("TestUserToUpdateLogin");
+            assertThat(updatedUser.getEmail()).isEqualTo("TestUser@email.ru");
+            assertThat(updatedUser.getBirthday()).isEqualTo("1999-09-09");
         } catch (NotFoundException e) {
             fail("NotFoundException was thrown");
         }
@@ -95,7 +97,7 @@ public class UserControllerTest {
      */
     @Test
     void nonExistingUserUpdateTest() {
-        User nonExistingUser = new User("login", "test@email.ru",
+        User nonExistingUser = new User(controllerTestUser.getId(), "login", "test@email.ru",
                 LocalDate.of(2000, Month.NOVEMBER, 10));
         final Exception actualException = Assertions.assertThrows(NotFoundException.class,
                 () -> {
@@ -161,6 +163,6 @@ public class UserControllerTest {
                 .findFirst()
                 .get()
                 .getName();
-        assertEquals(expectedName, "testLogin");
+        assertThat(expectedName).isEqualTo("testLogin");
     }
 }

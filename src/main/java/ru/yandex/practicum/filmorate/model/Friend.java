@@ -1,5 +1,7 @@
 package ru.yandex.practicum.filmorate.model;
+
 import lombok.Data;
+
 /**
  * Представляет друга в приложении Filmorate.
  */

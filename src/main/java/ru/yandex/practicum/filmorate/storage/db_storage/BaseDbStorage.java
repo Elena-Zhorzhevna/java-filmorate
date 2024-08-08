@@ -7,19 +7,19 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import ru.yandex.practicum.filmorate.exception.InternalServerException;
 
-
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.Collection;
 import java.util.List;
 import java.util.StringJoiner;
 
+/**
+ * В классе реализована базовая функциональность для работы с таблицами.
+ */
 @Log4j2
 @RequiredArgsConstructor
 public class BaseDbStorage<T> {
     public static final String CONTAINS_SQL_TEMPLATE = "SELECT EXISTS (SELECT 1 FROM %s WHERE %s = ?);";
-
-
     protected final JdbcTemplate jdbc;
     protected final RowMapper<T> mapper;
 
@@ -63,6 +63,7 @@ public class BaseDbStorage<T> {
             throw new InternalServerException("Не удалось обновить данные");
         }
     }
+
     protected boolean contains(String tableName, String idColumnName, Long idValue) {
         return Boolean.TRUE.equals(jdbc.query(CONTAINS_SQL_TEMPLATE.formatted(tableName, idColumnName), rs -> {
             if (rs.next()) {

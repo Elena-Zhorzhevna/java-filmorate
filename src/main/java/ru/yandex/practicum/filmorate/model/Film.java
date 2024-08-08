@@ -1,10 +1,10 @@
 package ru.yandex.practicum.filmorate.model;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.HashSet;
-
 import java.util.Set;
 
 /**
@@ -45,9 +45,10 @@ public class Film {
      * Эта оценка определяет возрастное ограничение для фильма.
      */
     private RatingMpa mpa;
-
+    /**
+     * Идентификатор рейтинга фильмаю
+     */
     private int ratingId;
-
     /**
      * Свойство — «жанр». У фильма может быть сразу несколько жанров.
      */
@@ -86,6 +87,13 @@ public class Film {
         this.genres = genres;
     }
 
+    public Film(String name, String description, LocalDate releaseDate, int duration, RatingMpa mpa) {
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+        this.mpa = mpa;
+    }
 
     /**
      * Метод, добавляющий лайк фильму.
@@ -101,6 +109,9 @@ public class Film {
         likes.remove(userId);
     }
 
+    /**
+     * Метод, добавляющий фильму жанр.
+     */
     public void addGenre(Long filmId, Genre genre) {
         genres.add(genre);
     }

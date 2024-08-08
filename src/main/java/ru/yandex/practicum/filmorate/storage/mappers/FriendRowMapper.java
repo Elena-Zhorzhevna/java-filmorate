@@ -7,6 +7,9 @@ import ru.yandex.practicum.filmorate.model.Friend;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Класс обрабатывает отдельно каждую запись, полученную из БД, и возвращает уже готовый объект — Friend.
+ */
 @Component
 public class FriendRowMapper implements RowMapper<Friend> {
 

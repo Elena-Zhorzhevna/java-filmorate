@@ -5,12 +5,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
-
 import ru.yandex.practicum.filmorate.model.RatingMpa;
 
 import java.util.Collection;
 
-
+/**
+ * Является DAO — объектом доступа к данным рейтинга фильма.
+ */
 @Log4j2
 @Repository
 public class RatingMpaDbStorage extends BaseDbStorage<RatingMpa> {
@@ -24,6 +25,12 @@ public class RatingMpaDbStorage extends BaseDbStorage<RatingMpa> {
         super(jdbc, mapper);
     }
 
+    /**
+     * Получение рейтинга по идентификатору.
+     *
+     * @param id Идентификатор рейтинга.
+     * @return Рейтинг с указанным идентификатором.
+     */
     public RatingMpa getRatingMpa(int id) {
         RatingMpa mpa = findOne(SELECT_RATING_MPA, id);
         if (mpa != null) {
@@ -34,8 +41,12 @@ public class RatingMpaDbStorage extends BaseDbStorage<RatingMpa> {
         }
     }
 
+    /**
+     * Получение всех рейтингов.
+     *
+     * @return Коллекция рейтингов.
+     */
     public Collection<RatingMpa> getAllRatings() {
         return findMany(SELECT_ALL_RATINGS);
     }
-
 }

@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 
 /**
  * Сервисный класс, который обрабатывает операции и взаимодействия, связанные с фильмами.
+ * Во всех случаях возвращает объекты FilmDto.
  */
 @Service
 public class FilmService {
@@ -34,13 +35,14 @@ public class FilmService {
     private final RatingMpaDbStorage ratingMpaDbStorage;
     private final GenreDbStorage genreDbStorage;
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(FilmService.class);
-    private final ApplicationContext applicationContext; // self injection
+    private final ApplicationContext applicationContext;
 
     @Autowired
     public FilmService(@Qualifier("userDbStorage") UserStorage userStorage,
                        @Qualifier("filmDbStorage") FilmStorage filmStorage,
                        LikeDbStorage likeDbStorage,
-                       RatingMpaDbStorage ratingMpaDbStorage, GenreDbStorage genreDbStorage, WebApplicationContext applicationContext) {
+                       RatingMpaDbStorage ratingMpaDbStorage, GenreDbStorage genreDbStorage,
+                       WebApplicationContext applicationContext) {
         this.userStorage = userStorage;
         this.filmStorage = filmStorage;
         this.likeDbStorage = likeDbStorage;
@@ -80,7 +82,7 @@ public class FilmService {
      * @return Добавленный фильм.
      */
     public FilmDto createFilm(Film film) {
-        long filmById =  filmStorage.create(film).getId();
+        long filmById = filmStorage.create(film).getId();
 
         film.getGenres().forEach(genre -> genreDbStorage.addGenre(filmById, genre.getId()));
 
@@ -115,13 +117,9 @@ public class FilmService {
         Film film = filmStorage.findFilmById(filmId);
         User user = userStorage.findUserById(userId);
         likeDbStorage.addLike(filmId, userId);
-       /* if (filmStorage.isLiked(filmId, userId)) {
-            throw new IllegalArgumentException("Пользователь уже поставил лайк фильму");
-        }*/
         log.info("Пользователь {} поставил лайк фильму {}", user.getName(), film.getName());
         return self().getFilmById(filmId);
     }
-
 
     /**
      * Удаление лайка, поставленного фильму.
@@ -146,18 +144,6 @@ public class FilmService {
      * @param filmsCount Количество возвращаемых популярных фильмов, по умолчанию - 10.
      * @return Список самых популярных фильмов по количеству лайков.
      */
-
-
-    /*public List<FilmDto> getTopFilms(long filmsCount) {
-        log.info("Список самых популярных фильмов:");
-        return filmStorage.findAll().stream()
-                .filter(film -> film.getLikes() != null)
-                .map(FilmDtoMapper::mapToFilmDto)
-                .sorted((film1, film2) -> Integer.compare(film2.getLikes().size(), film1.getLikes().size()))
-                .limit(filmsCount)
-                .collect(Collectors.toList());
-                //.toList();
-    }*/
     public List<FilmDto> getTopFilms(Integer filmsCount) {
         Collection<Film> films = filmStorage.findAll();
         log.info("Список самых популярных фильмов:");
@@ -170,14 +156,19 @@ public class FilmService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Метод, сравнивающий два фильма по количеству лайков.
+     */
     private Comparator<FilmDto> byLikesCountBiggerFirst() {
         return Comparator.comparingInt((FilmDto filmDto) -> filmDto.getLikes().size()).reversed();
     }
 
-//    private int compare(FilmDto film1, FilmDto film2) {
-//        return -1 * Integer.compare(film1.getLikes().size(), film2.getLikes().size());
-//    }
-
+    /**
+     * Метод,заполняющий необходимые поля у фильма.
+     *
+     * @param film Требуемый фильм.
+     * @return Фильм с заполненными полями.
+     */
     private Film fillFullData(Film film) {
         long filmId = film.getId();
         if (film.getMpa() != null) {
@@ -187,6 +178,10 @@ public class FilmService {
         film.setLikes(new HashSet<>(likeDbStorage.getLikes(filmId)));
         return film;
     }
+
+    /**
+     * Метод класса для внедрения себя как зависимости.
+     */
     private FilmService self() {
         return applicationContext.getBean(FilmService.class);
     }

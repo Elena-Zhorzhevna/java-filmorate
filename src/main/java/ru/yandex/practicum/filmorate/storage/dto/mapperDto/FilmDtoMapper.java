@@ -7,6 +7,9 @@ import ru.yandex.practicum.filmorate.storage.dto.modelDto.GenreDto;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
+/**
+ * Класс для преобразования объектов типа Film в тип FilmDto.
+ */
 public class FilmDtoMapper {
     public static FilmDto mapToFilmDto(Film film) {
         FilmDto filmDto = new FilmDto();

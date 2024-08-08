@@ -29,11 +29,6 @@ public interface FilmStorage {
     Film findFilmById(Long filmId);
 
     /**
-     * Метод, проверяющий наличие лайка у данного пользователя.
-     */
-    //boolean isLiked(long filmId, long userId);
-
-    /**
      * Удаление всех фильмов.
      */
     void removeAllFilms();
