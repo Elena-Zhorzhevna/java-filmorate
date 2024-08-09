@@ -2,11 +2,10 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.db_storage.GenreDbStorage;
 import ru.yandex.practicum.filmorate.storage.dto.modelDto.FilmDto;
+import ru.yandex.practicum.filmorate.validator.FilmValidatorNew;
 
 import java.util.Collection;
 
@@ -18,8 +17,7 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class FilmController {
     private final FilmService filmService;
-    //    private final FilmValidator filmValidator;
-    private final GenreDbStorage genreDbStorage;
+    private final FilmValidatorNew filmValidatorNew;
 
     /**
      * Обрабатывает GET-запрос на получение всех фильмов.
@@ -50,14 +48,7 @@ public class FilmController {
      */
     @PostMapping
     public FilmDto create(@RequestBody Film film) {
-        /* валидация что все жанры существуют */
-        film.getGenres().forEach(it -> {
-            if (!genreDbStorage.contains((long) it.getId()))
-                throw new ValidationException("Не Существует жанра с id=\"" + it.getId() + "\"");
-        });
-        if (!genreDbStorage.contains((long) film.getMpa().getId()))
-            throw new ValidationException("Не Существует MPA рейтинга с id=\"" + film.getMpa().getId() + "\"");
-
+        filmValidatorNew.validate(film);
         return filmService.createFilm(film);
     }
 

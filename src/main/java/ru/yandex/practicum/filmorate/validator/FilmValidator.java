@@ -8,8 +8,9 @@ import java.time.LocalDate;
 
 /**
  * Класс для валидации объекта Film.
- * Проверка перед сохранением в базу
+ * Проверка перед сохранением в базу.
  */
+
 public final class FilmValidator {
     /**
      * Максимально допустимое количество символов в строке описания фильма.
@@ -77,5 +78,4 @@ public final class FilmValidator {
     private static boolean isValidDuration(int duration) {
         return duration > 0;
     }
-
 }

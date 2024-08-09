@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.RatingMpa;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.validator.FilmValidator;
+import ru.yandex.practicum.filmorate.validator.FilmValidatorNew;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -41,6 +42,8 @@ public class FilmDbStorage extends BaseDbStorage<Film> implements FilmStorage {
     private GenreDbStorage genreDbStorage;
     @Autowired
     private RatingMpaDbStorage ratingMpaDbStorage;
+    @Autowired
+    private FilmValidatorNew filmValidatorNew;
 
     public FilmDbStorage(JdbcTemplate jdbc, RowMapper<Film> mapper) {
         super(jdbc, mapper);
@@ -92,6 +95,7 @@ public class FilmDbStorage extends BaseDbStorage<Film> implements FilmStorage {
         );
         film.setId(id);
         log.info("Добавлен фильм: {}", film);
+        filmValidatorNew.validate(film);
         return film;
     }
 
@@ -167,6 +171,7 @@ public class FilmDbStorage extends BaseDbStorage<Film> implements FilmStorage {
 
     /**
      * Метод получения жанров фильма с указанным идентификатором.
+     *
      * @param filmId Идентификатор фильма.
      * @return Список жанров.
      */

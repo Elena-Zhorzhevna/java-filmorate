@@ -83,9 +83,7 @@ public class FilmService {
      */
     public FilmDto createFilm(Film film) {
         long filmById = filmStorage.create(film).getId();
-
         film.getGenres().forEach(genre -> genreDbStorage.addGenre(filmById, genre.getId()));
-
         return self().getFilmById(filmById);
     }
 
