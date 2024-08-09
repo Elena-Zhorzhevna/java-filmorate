@@ -75,8 +75,7 @@ public class UserController {
     @PutMapping("/{userId}/friends/{friendId}")
     public UserDto addFriend(@PathVariable("userId") long userId, @PathVariable("friendId") long friendId) {
 
-        /* Валидация, есть такие пользователи или нет - если нет, то упадём с NotFoundException -> 404 */
-        // Todo можно сделать красивее и понятнее
+        /* Валидация, есть такие пользователи или нет - если нет, то NotFoundException -> 404 */
         userService.getUserById(userId);
         userService.getUserById(friendId);
 

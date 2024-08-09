@@ -3,9 +3,7 @@ package ru.yandex.practicum.filmorate.service;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.WebApplicationContext;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
@@ -35,20 +33,17 @@ public class FilmService {
     private final RatingMpaDbStorage ratingMpaDbStorage;
     private final GenreDbStorage genreDbStorage;
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(FilmService.class);
-    private final ApplicationContext applicationContext;
 
     @Autowired
     public FilmService(@Qualifier("userDbStorage") UserStorage userStorage,
                        @Qualifier("filmDbStorage") FilmStorage filmStorage,
                        LikeDbStorage likeDbStorage,
-                       RatingMpaDbStorage ratingMpaDbStorage, GenreDbStorage genreDbStorage,
-                       WebApplicationContext applicationContext) {
+                       RatingMpaDbStorage ratingMpaDbStorage, GenreDbStorage genreDbStorage) {
         this.userStorage = userStorage;
         this.filmStorage = filmStorage;
         this.likeDbStorage = likeDbStorage;
         this.ratingMpaDbStorage = ratingMpaDbStorage;
         this.genreDbStorage = genreDbStorage;
-        this.applicationContext = applicationContext;
     }
 
     /**
@@ -84,7 +79,7 @@ public class FilmService {
     public FilmDto createFilm(Film film) {
         long filmById = filmStorage.create(film).getId();
         film.getGenres().forEach(genre -> genreDbStorage.addGenre(filmById, genre.getId()));
-        return self().getFilmById(filmById);
+        return this.getFilmById(filmById);
     }
 
     /**
@@ -116,7 +111,7 @@ public class FilmService {
         User user = userStorage.findUserById(userId);
         likeDbStorage.addLike(filmId, userId);
         log.info("Пользователь {} поставил лайк фильму {}", user.getName(), film.getName());
-        return self().getFilmById(filmId);
+        return this.getFilmById(filmId);
     }
 
     /**
@@ -133,7 +128,7 @@ public class FilmService {
         if (user == null) throw new NotFoundException("Не существует Пользователя с таким id=" + userId);
         likeDbStorage.deleteLike(filmId, userId);
         log.info("Пользователь " + user.getName() + " удалил лайк, поставленный фильму " + film.getName());
-        return self().getFilmById(filmId);
+        return this.getFilmById(filmId);
     }
 
     /**
@@ -147,7 +142,7 @@ public class FilmService {
         log.info("Список самых популярных фильмов:");
         return films.stream()
                 .filter(film -> film.getLikes() != null)
-                .map(self()::fillFullData)
+                .map(this::fillFullData)
                 .map(FilmDtoMapper::mapToFilmDto)
                 .sorted(byLikesCountBiggerFirst())
                 .limit(filmsCount)
@@ -175,12 +170,5 @@ public class FilmService {
         film.setGenres(new HashSet<>(genreDbStorage.getFilmGenres(filmId)));
         film.setLikes(new HashSet<>(likeDbStorage.getLikes(filmId)));
         return film;
-    }
-
-    /**
-     * Метод класса для внедрения себя как зависимости.
-     */
-    private FilmService self() {
-        return applicationContext.getBean(FilmService.class);
     }
 }

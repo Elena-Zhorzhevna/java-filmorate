@@ -3,9 +3,7 @@ package ru.yandex.practicum.filmorate.service;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.WebApplicationContext;
 import ru.yandex.practicum.filmorate.model.Friend;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
@@ -24,16 +22,12 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserStorage userStorage;
     private final FriendDbStorage friendDbStorage;
-    private final ApplicationContext applicationContext; // для self injection
-
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(UserService.class);
 
     @Autowired
-    public UserService(@Qualifier("userDbStorage") UserStorage userStorage, FriendDbStorage friendDbStorage,
-                       WebApplicationContext applicationContext) {
+    public UserService(@Qualifier("userDbStorage") UserStorage userStorage, FriendDbStorage friendDbStorage) {
         this.userStorage = userStorage;
         this.friendDbStorage = friendDbStorage;
-        this.applicationContext = applicationContext;
     }
 
     /**
@@ -97,7 +91,7 @@ public class UserService {
     public UserDto addFriend(Long userId, Long friendId) {
         friendDbStorage.addFriend(userId, friendId);
         log.info("Пользователь с ID = {} добавил в друзья пользователя с ID = {}", userId, friendId);
-        return self().getUserById(userId).orElseThrow();
+        return this.getUserById(userId).orElseThrow();
     }
 
     /**
@@ -152,12 +146,5 @@ public class UserService {
                 .map(userStorage::findUserById)
                 .map(UserDtoMapper::mapToUserDto)
                 .collect(Collectors.toList());
-    }
-
-    /**
-     * Метод класса для внедрения себя как зависимости
-     */
-    private UserService self() {
-        return applicationContext.getBean(UserService.class);
     }
 }
