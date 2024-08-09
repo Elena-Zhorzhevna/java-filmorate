@@ -1,19 +1,18 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.memory_storage;
 
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.validator.UserValidator;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Имплементирует интерфейс UserStorage, содержит логику хранения, обновления и поиска объектов User.
  */
-@Component
+@Component("inMemoryUserStorage")
 public class InMemoryUserStorage implements UserStorage {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(InMemoryUserStorage.class);
     private final Map<Long, User> users = new HashMap<>();
@@ -26,6 +25,19 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public Collection<User> findAll() {
         return users.values();
+    }
+
+    @Override
+    public Collection<User> findAll(Collection<Long> ids) {
+        List<User> rsl = new ArrayList<>(ids.size());
+        for (Long id : ids) {
+            var user = users.get(id);
+            if (user == null) {
+                continue;
+            }
+            rsl.add(user);
+        }
+        return rsl;
     }
 
     /**
@@ -90,7 +102,7 @@ public class InMemoryUserStorage implements UserStorage {
      * @param friendId Идентификатор второго пользователя.
      * @return Являются ли пользователи друзьями.
      */
-    @Override
+
     public boolean isFriend(long userId, long friendId) {
         return users.get(userId).getFriends().contains(friendId);
     }

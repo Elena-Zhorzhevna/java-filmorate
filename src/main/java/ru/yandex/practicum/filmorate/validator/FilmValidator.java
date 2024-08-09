@@ -8,7 +8,9 @@ import java.time.LocalDate;
 
 /**
  * Класс для валидации объекта Film.
+ * Проверка перед сохранением в базу.
  */
+
 public final class FilmValidator {
     /**
      * Максимально допустимое количество символов в строке описания фильма.
@@ -26,22 +28,14 @@ public final class FilmValidator {
      * @return Является ли объект удовлетворяющим требованиям.
      */
     public static boolean isValidFilm(@RequestBody Film film) {
-
-        if (!isValidName(film.getName())) {
+        if (!isValidName(film.getName()))
             throw new ValidationException("Название фильма не может быть пустым.");
-        }
-
-        if (!isValidDescription(film.getDescription())) {
+        if (!isValidDescription(film.getDescription()))
             throw new ValidationException("Максимальная длина описания - 200 символов.");
-        }
-
-        if (!isValidReleaseDate(film.getReleaseDate())) {
+        if (!isValidReleaseDate(film.getReleaseDate()))
             throw new ValidationException("Дата релиза не может быть раньше создания кино.");
-        }
-
-        if (!isValidDuration(film.getDuration())) {
+        if (!isValidDuration(film.getDuration()))
             throw new ValidationException("Продолжительность фильма должна быть положительным числом.");
-        }
         return true;
     }
 

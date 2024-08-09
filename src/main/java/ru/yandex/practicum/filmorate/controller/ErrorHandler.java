@@ -12,28 +12,27 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
  * Обработчик ошибок.
  */
 @RestControllerAdvice
-
 public class ErrorHandler {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(Error.class);
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFound(final NotFoundException e) {
-        log.error("NotFoundException");
+        log.error("NotFoundException", e);
         return new ErrorResponse("Искомый объект не найден.", e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidate(final ValidationException e) {
-        log.error("ValidationException");
+        log.error("ValidationException", e);
         return new ErrorResponse("Ошибка валидации.", e.getMessage());
     }
 
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleException(Throwable e) {
-        log.error("Возникло исключение");
+    public ErrorResponse handleException(final Throwable e) {
+        log.error("Возникло исключение", e);
         return new ErrorResponse("Возникло исключение.", e.getMessage());
     }
 }

@@ -15,6 +15,12 @@ public interface UserStorage {
     Collection<User> findAll();
 
     /**
+     * Список Пользователей в таком же порядке, как и {@param ids}.
+     * Не Содержит null.
+     */
+    Collection<User> findAll(Collection<Long> ids);
+
+    /**
      * Добавление пользователя.
      */
     User create(User user);
@@ -28,11 +34,6 @@ public interface UserStorage {
      * Получение пользователя по айди.
      */
     User findUserById(Long userId);
-
-    /**
-     * Метод, проверяющий, являются ли пользователи друзьями.
-     */
-    boolean isFriend(long filmId, long userId);
 
     /**
      * Удаление всех пользователей.

@@ -1,19 +1,20 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.memory_storage;
 
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.validator.FilmValidator;
 
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Имплементирует интерфейс FilmStorage, содержит логику хранения, обновления и поиска объектов Film.
  */
-@Component
+@Component("inMemoryFilmStorage")
 public class InMemoryFilmStorage implements FilmStorage {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(InMemoryFilmStorage.class);
     private final Map<Long, Film> films = new HashMap<>();
@@ -24,8 +25,8 @@ public class InMemoryFilmStorage implements FilmStorage {
      * @return Коллекция всех фильмов.
      */
     @Override
-    public Collection<Film> findAll() {
-        return films.values();
+    public List<Film> findAll() {
+        return (List<Film>) films.values();
     }
 
     /**
@@ -89,7 +90,7 @@ public class InMemoryFilmStorage implements FilmStorage {
      * @param userId Идентификатор пользователя, чей лайк проверяется у заданного фильма.
      * @return Наличие лайка заданного пользователя у заданного фильма.
      */
-    @Override
+
     public boolean isLiked(long filmId, long userId) {
         return films.get(filmId).getLikes().contains(userId);
     }

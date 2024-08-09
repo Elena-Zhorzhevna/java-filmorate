@@ -40,6 +40,19 @@ public class Film {
      * Свойство, содержащее список идентификаторов пользователей, поставивших лайк.
      */
     private Set<Long> likes = new HashSet<>();
+    /**
+     * Свойство — рейтинг Ассоциации кинокомпаний.
+     * Эта оценка определяет возрастное ограничение для фильма.
+     */
+    private RatingMpa mpa;
+    /**
+     * Идентификатор рейтинга фильмаю
+     */
+    private int ratingId;
+    /**
+     * Свойство — «жанр». У фильма может быть сразу несколько жанров.
+     */
+    private Set<Genre> genres = new HashSet<>();
 
     @JsonCreator
     public Film() {
@@ -63,6 +76,25 @@ public class Film {
         this.duration = duration;
     }
 
+    public Film(String name, String description, LocalDate releaseDate, int duration, Set<Long> likes,
+                RatingMpa mpa, Set<Genre> genres) {
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+        this.likes = likes;
+        this.mpa = mpa;
+        this.genres = genres;
+    }
+
+    public Film(String name, String description, LocalDate releaseDate, int duration, RatingMpa mpa) {
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+        this.mpa = mpa;
+    }
+
     /**
      * Метод, добавляющий лайк фильму.
      */
@@ -75,5 +107,12 @@ public class Film {
      */
     public void deleteLike(Long userId) {
         likes.remove(userId);
+    }
+
+    /**
+     * Метод, добавляющий фильму жанр.
+     */
+    public void addGenre(Long filmId, Genre genre) {
+        genres.add(genre);
     }
 }
