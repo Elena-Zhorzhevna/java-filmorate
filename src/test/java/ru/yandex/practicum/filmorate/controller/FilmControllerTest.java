@@ -1,32 +1,57 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.yandex.practicum.filmorate.exception.InternalServerException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.RatingMpa;
 import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.dto.modelDto.FilmDto;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest
+@AutoConfigureTestDatabase
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class FilmControllerTest {
-    @Autowired
-    FilmService filmService;
-    Map<Long, Film> films = new HashMap<>();
+    private final FilmService filmService;
+    Film testFilm = new Film();
+    Film testFilm2 = new Film();
+
+    @BeforeEach
+    public void beforeEach() {
+        testFilm.setName("ControllerTestFilm");
+        testFilm.setDescription("Description");
+        testFilm.setReleaseDate(LocalDate.parse("1965-12-12"));
+        testFilm.setDuration(150);
+        RatingMpa mpa = new RatingMpa();
+        mpa.setId(1);
+        testFilm.setMpa(mpa);
+
+        testFilm2.setName("ControllerTestFilm2");
+        testFilm2.setDescription("Desc2");
+        testFilm2.setReleaseDate(LocalDate.parse("1966-12-12"));
+        testFilm2.setDuration(90);
+        RatingMpa mpa2 = new RatingMpa();
+        mpa2.setId(4);
+        testFilm2.setMpa(mpa2);
+    }
 
     @AfterEach
     void afterEach() {
-        films.clear();
         filmService.removeAllFilms();
     }
 
@@ -35,17 +60,11 @@ public class FilmControllerTest {
      */
     @Test
     void findAllFilmsTest() {
-        Film film1 = new Film("testFilm1", "Comedy",
-                LocalDate.of(1995, Month.MAY, 12), 180);
-        films.put(film1.getId(), film1);
-        filmService.createFilm(film1);
-        Film film2 = new Film("testFilm2", "Triller",
-                LocalDate.of(1998, Month.APRIL, 20), 200);
-        films.put(film2.getId(), film2);
-        filmService.createFilm(film2);
-        String result = "[" + film1.toString() + ", " + film2.toString() + "]";
-        String expected = filmService.getAllFilms().toString();
-        assertEquals(expected, result);
+        filmService.createFilm(testFilm);
+        filmService.createFilm(testFilm2);
+        assertThat(filmService.getAllFilms().size()).isEqualTo(2);
+        assertThat(filmService.getAllFilms().stream().map(FilmDto::getName).toList())
+                .isEqualTo(List.of("ControllerTestFilm", "ControllerTestFilm2"));
     }
 
     /**
@@ -53,17 +72,14 @@ public class FilmControllerTest {
      */
     @Test
     void filmCreationTest() {
-        String name = "TestFilmForCreation";
-        String description = "TestDescription";
-        LocalDate releaseDate = LocalDate.of(2000, Month.MAY, 1);
-        int duration = 203;
-        Film film = new Film(name, description, releaseDate, duration);
-        try {
-            films.put(film.getId(), film);
-            assertEquals(film.getId(), films.get(film.getId()).getId());
-        } catch (ValidationException e) {
-            fail("ValidationException was thrown");
-        }
+        Film testCreationFilm = new Film(testFilm.getName(), testFilm.getDescription(), testFilm.getReleaseDate(),
+                testFilm.getDuration(), testFilm.getMpa());
+        filmService.createFilm(testCreationFilm);
+        assertThat(filmService.getFilmById(testCreationFilm.getId()).getName()).isEqualTo("ControllerTestFilm");
+        assertThat(filmService.getFilmById(testCreationFilm.getId()).getDescription()).isEqualTo("Description");
+        assertThat(filmService.getFilmById(testCreationFilm.getId()).getReleaseDate())
+                .isEqualTo("1965-12-12");
+        assertThat(filmService.getFilmById(testCreationFilm.getId()).getDuration()).isEqualTo(150);
     }
 
     /**
@@ -71,20 +87,15 @@ public class FilmControllerTest {
      */
     @Test
     public void updateExistingFilmTest() {
-        String name = "TestFilmToUpdate";
-        String description = "TestDescription";
-        LocalDate releaseDate = LocalDate.of(2013, Month.APRIL, 1);
-        int duration = 135;
-        Film existingFilm = new Film(name, description, releaseDate, duration);
-        filmService.createFilm(existingFilm);
-        Film newFilm = new Film(existingFilm.getId(), "NewName", "NewDescription", releaseDate, 90);
-        films.put(newFilm.getId(), newFilm);
+        FilmDto existingFilm = filmService.createFilm(testFilm);
+        Film newFilm = new Film(existingFilm.getId(), "NewName", "NewDescription",
+                LocalDate.parse("2000-10-10"), 90);
         try {
-            Film updatedFilm = filmService.updateFilm(newFilm);
-            assertEquals(updatedFilm.getName(), "NewName");
-            assertEquals(updatedFilm.getDescription(), "NewDescription");
-            assertEquals(updatedFilm.getReleaseDate(), releaseDate);
-            assertEquals(updatedFilm.getDuration(), 90);
+            FilmDto updatedFilm = filmService.updateFilm(newFilm);
+            assertThat(updatedFilm.getName()).isEqualTo("NewName");
+            assertThat(updatedFilm.getDescription()).isEqualTo("NewDescription");
+            assertThat(updatedFilm.getReleaseDate()).isEqualTo("2000-10-10");
+            assertThat(updatedFilm.getDuration()).isEqualTo(90);
         } catch (NotFoundException e) {
             fail("NotFoundException was thrown");
         }
@@ -95,8 +106,9 @@ public class FilmControllerTest {
      */
     @Test
     void nonExistingFilmUpdateTest() {
-        Film nonExistingFilm = new Film("name", "description", LocalDate.now(), 90);
-        final Exception actualException = Assertions.assertThrows(NotFoundException.class,
+        Film nonExistingFilm = new Film(testFilm.getId(), "NonExistingFilmName", "description",
+                LocalDate.parse("1990-12-12"), 90);
+        final Exception actualException = Assertions.assertThrows(InternalServerException.class,
                 () -> {
                     filmService.updateFilm(nonExistingFilm);
                 });
@@ -118,7 +130,7 @@ public class FilmControllerTest {
     }
 
     /**
-     * Создание фильма с описанием длиннее 200 символов.
+     * Создание фильма с описанием длиннее 200символов.
      */
     @Test
     void descriptionIsMore200Test() {
@@ -156,10 +168,12 @@ public class FilmControllerTest {
     @Test
     void dataIsAfterFilmsBirthdayTest() {
         Film film = new Film("name", "description",
-                LocalDate.parse("1895-12-29"), 60);
-        filmService.createFilm(film);
-        String expected = filmService.createFilm(film).toString();
-        assertEquals(expected, film.toString());
+                LocalDate.parse("1895-12-29"), 60, new RatingMpa(1, "G"));
+        FilmDto newFilm = filmService.createFilm(film);
+        assertThat(newFilm.getName()).isEqualTo(film.getName());
+        assertThat(newFilm.getDescription()).isEqualTo(film.getDescription());
+        assertThat(newFilm.getDuration()).isEqualTo(film.getDuration());
+        assertThat(newFilm.getReleaseDate()).isEqualTo(film.getReleaseDate());
     }
 
     /**
@@ -174,7 +188,7 @@ public class FilmControllerTest {
                 () -> {
                     filmService.createFilm(film);
                 });
-        Assertions.assertEquals(expectedExceptionMessage, actualException.getMessage());
+        assertThat(expectedExceptionMessage).isEqualTo(actualException.getMessage());
     }
 
     /**
@@ -183,10 +197,12 @@ public class FilmControllerTest {
     @Test
     void durationIsMore0() {
         Film film = new Film("name", "description",
-                LocalDate.parse("1995-10-25"), 50);
+                LocalDate.parse("1995-10-25"), 50, new RatingMpa(1, "G"));
         filmService.createFilm(film);
-        String result = "[" + film.toString() + "]";
+        assertThat(filmService.getAllFilms().size()).isEqualTo(1);
+        String result = "[FilmDto(id=1, name=name, description=description, releaseDate=1995-10-25, duration=50, " +
+                "likes=[], genres=[], mpa=RatingMpaDto(id=1, name=null))]";
         String expected = filmService.getAllFilms().toString();
-        assertEquals(expected, result);
+        assertThat(expected).isEqualTo(result);
     }
 }
